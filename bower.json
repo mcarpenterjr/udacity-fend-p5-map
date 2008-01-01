@@ -1,11 +1,21 @@
 {
-  "name": "udacity-fend-p5",
-  "description": "Udacity FEND P5",
-  "main": [
-    "index.html",
-    "js/app.js",
-    "css/main.css"
-  ],
+  "name": "udacity-fend-p5-map",
+  "version": "1.0.0",
+  "description": "Udacity FEND Project 5.1 Neighborhood map, using KnockoutJS, GoogleMaps API, Yelp API and FourSquare API. Has a collection of JSON hard coded locations, and has a search function. uses geolocation to pull and present relevant 4s and yelp businesses.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcarpenterjr/udacity-fend-p5-map.git"
+  },
+  "author": "Mark N Carpenter Jr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcarpenterjr/udacity-fend-p5-map/issues"
+  },
+  "homepage": "https://github.com/mcarpenterjr/udacity-fend-p5-map#readme",
   "dependencies": {},
   "devDependencies": {
     "jquery": "~2.1.4",
@@ -17,9 +27,6 @@
   },
   "moduleType": [],
   "keywords": [],
-  "authors": [
-    "Mark N Carpenter Jr"
-  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
