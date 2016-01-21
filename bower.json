@@ -1,0 +1,32 @@
+{
+  "name": "udacity-fend-p5",
+  "description": "Udacity FEND P5",
+  "main": [
+    "index.html",
+    "js/app.js",
+    "css/main.css"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "jquery": "~2.1.4",
+    "Materialize": "materialize#~0.97.5",
+    "font-awesome": "~4.5.0",
+    "knockout": "~3.4.0",
+    "Font-Awesome-SVG-PNG": "font-awesome-svg-png#~1.1.2",
+    "sweetalert": "~1.1.3"
+  },
+  "moduleType": [],
+  "keywords": [],
+  "authors": [
+    "Mark N Carpenter Jr"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "private": true
+}

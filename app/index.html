@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
+  <link type="text/css" rel="stylesheet" href="css/sweetalert.css" />
+  <link rel="stylesheet" href="css/font-awesome.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <title>West Dover Vermont, Places</title>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <!-- Filters and Related -->
+  <div id="filters">
+    <div id="tags">
+      <div id="tagInput">
+        <form class="z-depth-4" data-bind="submit: addTag">
+          <div class="input-field col s6">
+            <input placeholder="Add Tags... One at a Time." type="text" class="validate" data-bind='value: tagToAdd, valueUpdate: "afterkeydown"' />
+          </div>
+          <button class="btn waves-effect waves-green add" data-bind="enable: tagToAdd().length > 0">Add <i class="fa fa-plus-circle right"></i></button>
+          <button class="btn waves-effect waves-red remove" data-bind="click: removeLastTag, enable: tags().length > 0">Remove<i class="fa fa-times right"></i></button>
+        </form>
+      </div>
+      <div id="tagBox" data-bind="css: {visible: tags().length > 0}" class="z-depth-2">
+        <ul data-bind="foreach: tags">
+          <li class="chip" data-bind="text: $data"></li>
+        </ul>
+      </div>
+    </div>
+    <div id="search">
+      <div id="searchInput">
+        <form class="z-depth-4">
+          <div class="input-field col s6">
+            <input placeholder="Search. . . " type="text" class="validate" data-bind="value: appVM.searchTerm, valueUpdate:'keyup'" autocomplete="off" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Display -->
+  <div id="fourSquare">
+    <ul class="collapsible popout z-depth-5" data-collapsible="accordion">
+      <li data-bind="foreach: results">
+        <div class="collapsible-header"><i class="fa fa-foursquare"></i>
+          <a href="#" data-bind="click: $parent.selectedMarker">
+            <span data-bind="text: $data"></span>
+          </a>
+        </div>
+        <div class="collapsible-body">
+          <p data-bind="text: $data"></p>
+          <p>people checked-in now</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Action Button -->
+  <div class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;">
+    <a class="btn-floating btn-large red"><i class="fa fa-large fa-bars"></i></a>
+    <ul>
+      <li><a id="showTags" class="btn-floating red"><i class="fa fa-tags"></i></a></li>
+<<<<<<< HEAD
+      <li><a id="showSearch" class="btn-floating yellow darken-1"><i class="fa fa-search"></i></a></li>
+      <li><a id="showFs" class="btn-floating blue"><i class="fa fa-foursquare"></i></a></li>
+=======
+      <li><a id="showFs" class="btn-floating blue"><i class="fa fa-foursquare"></i></a></li>
+      <li><a class="btn-floating yellow darken-1"><i class="fa fa-compass"></i></a></li>
+>>>>>>> origin/master
+      <li><a class="btn-floating green"><i class="fa fa-map-marker"></i></a></li>
+    </ul>
+  </div>
+
+  <!-- Script Stuff -->
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM&libraries=places,visualization">
+  </script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/materialize.js"></script>
+  <script type="text/javascript" src="js/knockout.js"></script>
+<<<<<<< HEAD
+  <script type="text/javascript" src="js/knockout.mapping.js"></script>
+=======
+>>>>>>> origin/master
+  <script type="text/javascript" src="js/sweetalert.min.js"></script>
+  <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+  <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+</body>
+
+</html>

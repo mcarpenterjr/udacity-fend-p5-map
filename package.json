@@ -1,0 +1,45 @@
+{
+  "name": "udacity-fend-p5-map",
+  "version": "1.0.0",
+  "description": "Udacity FEND Project 5.1 Neighborhood map, using KnockoutJS, GoogleMaps API, Yelp API and FourSquare API. Has a collection of JSON hard coded locations, and has a search function. uses geolocation to pull and present relevant 4s and yelp businesses.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcarpenterjr/udacity-fend-p5-map.git"
+  },
+  "author": "Mark N Carpenter Jr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mcarpenterjr/udacity-fend-p5-map/issues"
+  },
+  "homepage": "https://github.com/mcarpenterjr/udacity-fend-p5-map#readme",
+  "devDependencies": {
+    "bower": "^1.7.1",
+    "browser-sync": "^2.8.2",
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-cache": "^0.2.10",
+    "gulp-concat": "^2.6.0",
+    "gulp-concat-css": "^2.2.0",
+    "gulp-cssnano": "^2.0.0",
+    "gulp-fontgen": "^0.1.5",
+    "gulp-google-webfonts": "0.0.6",
+    "gulp-html-replace": "^1.5.1",
+    "gulp-htmlmin": "^1.3.0",
+    "gulp-image-resize": "^0.6.0",
+    "gulp-imagemin": "^2.3.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-livereload": "^3.8.0",
+    "gulp-minify-css": "^1.2.3",
+    "gulp-minify-html": "^1.0.5",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0",
+    "run-sequence": "^1.1.2",
+    "vinyl-fs": "^1.0.0"
+  }
+}
