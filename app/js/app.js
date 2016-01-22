@@ -108,7 +108,7 @@ function appVM() {
 
   // Search term empty Variable.
   self.query = ko.observable('');
-  self.searchResults = ko.observableArray([]),
+  self.searchResults = ko.observableArray([]);
 
   // Empty tag observable array
   self.tags = ko.observableArray();
