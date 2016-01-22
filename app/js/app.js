@@ -93,8 +93,6 @@ var model = new model();
 
 //-------------------------------------------------------------------------
 
-//-------------------------------------------------------------------------
-
 function appVM() {
   var self = this;
   // Foursquare ID and Secret Token for the api.
@@ -107,8 +105,12 @@ function appVM() {
   // Marker and InfoWindow Content Variable and Array.
   var infoWindowHTML = '';
   self.infoWindowHTMLs = [];
+
   // Search term empty Variable.
-  self.searchTerm = ko.observable('');
+  self.query = ko.observable('');
+  self.searchResults = ko.observableArray([]),
+
+  // Empty tag observable array
   self.tags = ko.observableArray();
   // Converts location data object's name's to an array then pushes to an
   // observable.
@@ -132,14 +134,14 @@ function appVM() {
   //**********************Search Function***********************//
 
   function search(value) {
-    appVM.results.removeAll();
+    self.searchResults.removeAll();
     console.log('Search Is Active');
 
     if (value == '') return;
 
     for (var location in model.defLocations) {
       if (model.defLocations[location].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        appVM.dispResults.results.push(model.defLocations.name[location]);
+        appVM.searchResults.push(model.defLocations[location]);
         console.log('KEYSTROKES BITCHES!')
       }
     }
@@ -310,7 +312,7 @@ function appVM() {
   // This runs the foursquare API call and appends the data returned to the
   // map markers.
   self.fsApiCall(model.defLocations);
-<<<<<<< HEAD
+
 
   //**********************************************************************
   //    API Call with ko.mapping plugin.
@@ -344,8 +346,6 @@ function appVM() {
   //
   //
   //**********************************************************************
-=======
->>>>>>> origin/master
 
 }
 
@@ -363,34 +363,10 @@ var init = function() {
     });
     $('#showFs').click(function() {
       $('#fourSquare').toggle('slow');
-<<<<<<< HEAD
     });
     $('#showSearch').click(function() {
-      $('#search').toggle('slow');
+      $('#searchDisp').toggle('slow');
     });
-  });
-  $(document)
-    .ajaxStart(function() {
-      // Stuff Goes Here
-    })
-    .ajaxStop(function() {
-      // Stuff goes here
-=======
->>>>>>> origin/master
-    });
-  swal({
-    title: "Finding all the spots...",
-    text: '<div class="preloader-wrapper big active">' +
-      '<div class="spinner-layer spinner-red-only">' +
-      '<div class="circle-clipper left">' +
-      '<div class="circle"></div></div>' +
-      '<div class="gap-patch"><div class="circle">' +
-      '</div></div><div class="circle-clipper right">' +
-      '<div class="circle"></div></div></div>',
-    showCancelButton: false,
-    showConfirmButton: false,
-    html: true,
-    timer: 3150
   });
   $(document)
     .ajaxStart(function() {
@@ -417,5 +393,5 @@ var init = function() {
 
 var appVM = new appVM();
 init();
-appVM.searchTerm.subscribe(appVM.search);
+appVM.query.subscribe(appVM.search);
 ko.applyBindings(appVM);

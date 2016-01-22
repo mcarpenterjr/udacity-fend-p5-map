@@ -90,7 +90,7 @@ html, body {
   background: rgba(0, 0, 0, .7);
   border-radius: 5px;
 }
-#search {
+#searchDisp {
   display: none;
   width: 100%;
   margin-top: 5px;
@@ -116,6 +116,21 @@ html, body {
   display: none;
 }
 #fourSquare::-mozilla-scrollbar{
+  display: none;
+}
+#searchResults {
+  display: none;
+  position: absolute;
+  top: 350px;
+  right: 5px;
+  width: 300px;
+  height: 315px;
+  overflow-y: scroll;
+}
+#searchResults::-webkit-scrollbar{
+  display: none;
+}
+#searchResults::-mozilla-scrollbar{
   display: none;
 }
 #yelp {
