@@ -106,7 +106,7 @@ function appVM() {
   self.infoWindowHTMLs = [];
 
   // Search term empty Variable.
-  self.query = ko.observable("");
+  self.searchQuery = ko.observable("");
   self.searchResults = ko.observableArray([]);
 
 
@@ -119,16 +119,16 @@ function appVM() {
       model.markers[i].setVisible(false);
     }
     self.searchList.forEach(function(item, index, array) {
-      if (item.indexOf(self.searchTerm().toLowerCase()) > -1) {
-        self.results.push(self.initResultsList[index]);
+      if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
+        self.results.push(self.dispResultsList[index]);
 
         model.markers[index].setVisible(true);
       }
     });
 
     //If the filter input is empty, resets all locations to be visible
-    if (self.searchTerm() === '') {
-      self.results(self.initResultsList.slice(0));
+    if (self.searchQuery() === '') {
+      self.results(self.dispResultsList.slice(0));
       model.markers.forEach(function(item, index, array) {
         if (!item.getVisible()) {
           item.setVisible(true);
@@ -138,7 +138,7 @@ function appVM() {
   }.bind(this);
 
   self.clearSearch = function() {
-    self.searchTerm('');
+    self.searchQuery('');
     if (openInfoWindow) openInfoWindow.close();
     if (markerBouncing) markerBouncing.setAnimation(null);
     self.searchF();
@@ -391,5 +391,4 @@ var init = function() {
 
 var appVM = new appVM();
 init();
-appVM.query.subscribe(appVM.search);
 ko.applyBindings(appVM);

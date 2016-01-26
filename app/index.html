@@ -21,7 +21,7 @@
       <div id="searchInput">
         <form id="searchBox" class="z-depth-4">
           <div class="input-field col s6">
-            <input id="search" placeholder="Search. . . " type="text" class="validate" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
+            <input id="search" placeholder="Search. . . " type="text" class="validate" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off" />
           </div>
         </form>
       </div>
