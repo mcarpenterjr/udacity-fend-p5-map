@@ -201,6 +201,7 @@ function appVM() {
   // InfoWindow Toggle-er
   function toggleInfoWindow(id) {
     google.maps.event.trigger(model.markers[id], 'click');
+    $('#fourSquare').hide('slow');
   }
 
   // Function to interate through hardcoded Default Locations
