@@ -17,25 +17,9 @@
 
   <!-- Filters and Related -->
   <div id="filters">
-    <div id="tags">
-      <div id="tagInput">
-        <form class="z-depth-4" data-bind="submit: addTag">
-          <div class="input-field col s6">
-            <input placeholder="Add Tags... One at a Time." type="text" class="validate" data-bind='value: tagToAdd, valueUpdate: "afterkeydown"' />
-          </div>
-          <button class="btn waves-effect waves-green add" data-bind="enable: tagToAdd().length > 0">Add <i class="fa fa-plus-circle right"></i></button>
-          <button class="btn waves-effect waves-red remove" data-bind="click: removeLastTag, enable: tags().length > 0">Remove<i class="fa fa-times right"></i></button>
-        </form>
-      </div>
-      <div id="tagBox" data-bind="css: {visible: tags().length > 0}" class="z-depth-2">
-        <ul data-bind="foreach: tags">
-          <li class="chip" data-bind="text: $data"></li>
-        </ul>
-      </div>
-    </div>
     <div id="searchDisp">
       <div id="searchInput">
-        <form class="z-depth-4">
+        <form id="searchBox" class="z-depth-4">
           <div class="input-field col s6">
             <input id="search" placeholder="Search. . . " type="text" class="validate" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
           </div>
@@ -54,7 +38,7 @@
           </a>
         </div>
         <div class="collapsible-body">
-          <p data-bind="text: $data"></p>
+          <p data-bind="text: $parent.venue_id"></p>
           <p>people checked-in now</p>
         </div>
       </li>
@@ -67,7 +51,7 @@
           <span data-bind="text: name"></span>
         </div>
         <div class="collapsible-body">
-          <p data-bind="text: venue_id"></p>
+          <!-- <p data-bind="text: venue_id"></p> -->
         </div>
       </li>
     </ul>
@@ -77,7 +61,6 @@
   <div class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;">
     <a class="btn-floating btn-large red"><i class="fa fa-large fa-bars"></i></a>
     <ul>
-      <li><a id="showTags" class="btn-floating red"><i class="fa fa-tags"></i></a></li>
       <li><a id="showSearch" class="btn-floating yellow darken-1"><i class="fa fa-search"></i></a></li>
       <li><a id="showFs" class="btn-floating blue"><i class="fa fa-foursquare"></i></a></li>
       <li><a class="btn-floating green"><i class="fa fa-map-marker"></i></a></li>

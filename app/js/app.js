@@ -1,85 +1,84 @@
 function model() {
-
   var self = this;
 
-  //Hardcoded list of locations
-  self.defLocations = [{
-    name: "1900' Burger",
-    lat: 42.9672693,
-    lng: -72.8964758,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4d31dc00ceb62d4367ece961",
-    business_id: null,
+  // Hardcoded list of locations
+  this.defLocations = [{
+    "name": "1900' Burger",
+    "lat": 42.9672693,
+    "lng": -72.8964758,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "4d31dc00ceb62d4367ece961",
+    "business_id": ""
   }, {
-    name: "Cuzzins Bar and Grill",
-    lat: 42.9675362,
-    lng: -72.8966528,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4ad4a2a8f964a52073e820e3",
-    business_id: null,
+    "name": "Cuzzins Bar and Grill",
+    "lat": 42.9675362,
+    "lng": -72.8966528,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "4ad4a2a8f964a52073e820e3",
+    "business_id": ""
   }, {
-    name: "The Bull Wheel",
-    lat: 42.9601797,
-    lng: -72.9225016,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "5298eab7498ea48249ee85cd",
-    business_id: null,
+    "name": "The Bull Wheel",
+    "lat": 42.9601797,
+    "lng": -72.9225016,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "5298eab7498ea48249ee85cd",
+    "business_id": ""
   }, {
-    name: "The Snow Barn",
-    lat: 42.964592,
-    lng: -72.892258,
-    icon: "img/glyphs/33/music-note.png",
-    venue_id: "41e46880f964a520d01e1fe3",
-    business_id: null,
+    "name": "The Snow Barn",
+    "lat": 42.964592,
+    "lng": -72.892258,
+    "icon": "img/glyphs/33/music-note.png",
+    "venue_id": "41e46880f964a520d01e1fe3",
+    "business_id": ""
   }, {
-    name: "World Class Ski and Sport",
-    lat: 42.9448568,
-    lng: -72.8651127,
-    icon: "img/glyphs/33/bag.png",
-    venue_id: "4f48f75ae4b0291e48e4d5ce",
-    business_id: null,
+    "name": "World Class Ski and Sport",
+    "lat": 42.9448568,
+    "lng": -72.8651127,
+    "icon": "img/glyphs/33/bag.png",
+    "venue_id": "4f48f75ae4b0291e48e4d5ce",
+    "business_id": ""
   }, {
-    name: "Dover Joe's",
-    lat: 42.9501808,
-    lng: -72.8779057,
-    icon: "img/glyphs/33/fork.png",
-    venue_id: "4d445b4ae198721e3fd4ba8b",
-    business_id: null,
+    "name": "Dover Joe's",
+    "lat": 42.9501808,
+    "lng": -72.8779057,
+    "icon": "img/glyphs/33/fork.png",
+    "venue_id": "4d445b4ae198721e3fd4ba8b",
+    "business_id": ""
   }, {
-    name: "The Valley View Saloon",
-    lat: 42.395519,
-    lng: -72.856280,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4b6a4ab6f964a52000d12be3",
-    business_id: null,
+    "name": "The Valley View Saloon",
+    "lat": 42.395519,
+    "lng": -72.856280,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "4b6a4ab6f964a52000d12be3",
+    "business_id": ""
   }, {
-    name: "The Lodge @ Mont Snow",
-    lat: 42.9648109,
-    lng: -72.8889477,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4bc0d88d4cdfc9b68d989321",
-    business_id: null,
+    "name": "The Lodge @ Mont Snow",
+    "lat": 42.9648109,
+    "lng": -72.8889477,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "4bc0d88d4cdfc9b68d989321",
+    "business_id": ""
   }, {
-    name: "Snow Lake Lodge",
-    lat: 42.9644927,
-    lng: -72.8901137,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4b5a3af9f964a5200ab628e3",
-    business_id: null,
+    "name": "Snow Lake Lodge",
+    "lat": 42.9644927,
+    "lng": -72.8901137,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "4b5a3af9f964a5200ab628e3",
+    "business_id": ""
   }, {
-    name: "The Matterhorn Inn",
-    lat: 42.9496089,
-    lng: -72.8745406,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4b8c88e6f964a52087d532e3",
-    business_id: null,
+    "name": "The Matterhorn Inn",
+    "lat": 42.9496089,
+    "lng": -72.8745406,
+    "icon": "img/glyphs/33/beer.png",
+    "venue_id": "4b8c88e6f964a52087d532e3",
+    "business_id": ""
   }, {
-    name: "Sports Odyssey",
-    lat: 42.9484209,
-    lng: -72.8725026,
-    icon: "img/glyphs/33/beer.png",
-    venue_id: "4cb0985fdb32f04dca06c14d",
-    business_id: null,
+    "name": "Sports Odyssey",
+    "lat": 42.9484209,
+    "lng": -72.8725026,
+    "icon": "img/glyphs/33/bag.png",
+    "venue_id": "4cb0985fdb32f04dca06c14d",
+    "business_id": ""
   }];
 
   //Set the home location coordinates to initialize the map here
@@ -107,64 +106,25 @@ function appVM() {
   self.infoWindowHTMLs = [];
 
   // Search term empty Variable.
-  self.query = ko.observable('');
+  self.query = ko.observable("");
   self.searchResults = ko.observableArray([]);
 
-  // Empty tag observable array
-  self.tags = ko.observableArray();
-  // Converts location data object's name's to an array then pushes to an
-  // observable.
-
-  self.dispResults = function(defLocations) {
-    self.dispResultsList = [];
-    self.searchList = [];
-    for (i = 0; i < model.defLocations.length; i++) {
-      var item = model.defLocations[i].name;
-      self.dispResultsList.push(item);
-      // We can Uncomment below for Case Insensitive search, we'll
-      // test a little more before we do.
-      self.searchList.push(item.toLowerCase());
-      console.log('Default Names Have Been Pushed');
-    }
-    self.results = ko.observableArray(self.dispResultsList.slice(0));
-  };
-  // Invokes initResults function on our locations.
-  self.dispResults(model.defLocations);
 
   //**********************Search Function***********************//
 
   function search(value) {
     self.searchResults.removeAll();
-    console.log('Search Is Active');
 
     if (value == '') return;
 
     for (var location in model.defLocations) {
       if (model.defLocations[location].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
         appVM.searchResults.push(model.defLocations[location]);
-        console.log('KEYSTROKES BITCHES!')
       }
     }
   }
 
   //***************************************************************//
-
-  // Various functions to Add, Remove Last and Clear the tag input list.
-  self.tagToAdd = ko.observable("");
-  self.addTag = function() {
-    if ((self.tagToAdd() !== "") && (self.tags.indexOf(self.tagToAdd()) < 0))
-      self.tags.push(self.tagToAdd());
-    self.tagToAdd("");
-    self.update();
-  };
-  self.removeLastTag = function() {
-    self.tags.pop();
-    self.update();
-  };
-  self.clearTags = function() {
-    self.tags.removeAll();
-    self.update();
-  };
 
   // Begining of our google map functions.
   function dispMap(latlng) {
@@ -197,6 +157,7 @@ function appVM() {
       clickable: true,
       icon: icon
     };
+
     var marker = new google.maps.Marker(markerOptions);
     marker.addListener('click', toggleBounce);
 
@@ -204,6 +165,7 @@ function appVM() {
       content: content,
       position: latlng
     };
+
     var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
     model.infoWindows.push(infoWindow);
 
@@ -225,7 +187,6 @@ function appVM() {
         markerBouncing = null;
       }
     }
-
     return marker;
   }
 
@@ -256,6 +217,22 @@ function appVM() {
       model.markers.push(marker);
       console.log('Pushed New Makrers');
     }
+  };
+
+  // Converts location data object's name's to an array then pushes to an
+  // observable.
+  self.dispResults = function(defLocations) {
+    self.dispResultsList = [];
+    self.searchList = [];
+    for (i = 0; i < model.defLocations.length; i++) {
+      var item = model.defLocations[i].name;
+      self.dispResultsList.push(item);
+      // We can Uncomment below for Case Insensitive search, we'll
+      // test a little more before we do.
+      self.searchList.push(item.toLowerCase());
+      console.log('Default Names Have Been Pushed');
+    }
+    self.results = ko.observableArray(self.dispResultsList.slice(0));
   };
 
   // Our Error Message timer... If fourSquare does not return any results
@@ -307,6 +284,8 @@ function appVM() {
     }
   };
 
+  // Invokes initResults function on our locations.
+  self.dispResults(model.defLocations);
   // This fires off the initMap function, setting the markers from the model.
   self.initMap(model.defLocations);
   // This runs the foursquare API call and appends the data returned to the
@@ -356,10 +335,6 @@ var init = function() {
   $(document).ready(function() {
     $('.collapsible').collapsible({
       accordion: true
-    });
-    $('#showTags').click(function() {
-      $('#tagInput').toggle('slow');
-      appVM.clearTags();
     });
     $('#showFs').click(function() {
       $('#fourSquare').toggle('slow');
