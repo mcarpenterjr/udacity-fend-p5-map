@@ -112,17 +112,39 @@ function appVM() {
 
   //**********************Search Function***********************//
 
-  function search(value) {
+  self.searchF = function() {
     self.searchResults.removeAll();
 
-    if (value == '') return;
-
-    for (var location in model.defLocations) {
-      if (model.defLocations[location].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        appVM.searchResults.push(model.defLocations[location]);
-      }
+    for (var i = 0; i < model.markers.length; i++) {
+      model.markers[i].setVisible(false);
     }
-  }
+    self.searchList.forEach(function(item, index, array) {
+      if (item.indexOf(self.searchTerm().toLowerCase()) > -1) {
+        self.results.push(self.initResultsList[index]);
+
+        model.markers[index].setVisible(true);
+      }
+    });
+
+    //If the filter input is empty, resets all locations to be visible
+    if (self.searchTerm() === '') {
+      self.results(self.initResultsList.slice(0));
+      model.markers.forEach(function(item, index, array) {
+        if (!item.getVisible()) {
+          item.setVisible(true);
+        }
+      });
+    }
+  }.bind(this);
+
+  self.clearSearch = function() {
+    self.searchTerm('');
+    if (openInfoWindow) openInfoWindow.close();
+    if (markerBouncing) markerBouncing.setAnimation(null);
+    self.searchF();
+    self.map.panTo(self.homelatlng);
+    self.map.setZoom(15);
+  };
 
   //***************************************************************//
 
@@ -351,20 +373,20 @@ var init = function() {
     .ajaxStop(function() {
       // Stuff goes here
     });
-    swal({
-      title: "Finding all the spots...",
-      text: '<div class="preloader-wrapper big active">' +
-        '<div class="spinner-layer spinner-red-only">' +
-        '<div class="circle-clipper left">' +
-        '<div class="circle"></div></div>' +
-        '<div class="gap-patch"><div class="circle">' +
-        '</div></div><div class="circle-clipper right">' +
-        '<div class="circle"></div></div></div>',
-      showCancelButton: false,
-      showConfirmButton: false,
-      html: true,
-      timer: 3150
-    });
+  swal({
+    title: "Finding all the spots...",
+    text: '<div class="preloader-wrapper big active">' +
+      '<div class="spinner-layer spinner-red-only">' +
+      '<div class="circle-clipper left">' +
+      '<div class="circle"></div></div>' +
+      '<div class="gap-patch"><div class="circle">' +
+      '</div></div><div class="circle-clipper right">' +
+      '<div class="circle"></div></div></div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    html: true,
+    timer: 3150
+  });
 };
 
 var appVM = new appVM();
