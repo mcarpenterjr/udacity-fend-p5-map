@@ -109,11 +109,28 @@ function appVM() {
   self.searchQuery = ko.observable("");
   self.searchResults = ko.observableArray([]);
 
+  // Converts location data object's name's to an array then pushes to an
+  // observable.
+  self.dispResults = function(defLocations) {
+    self.dispResultsList = [];
+    self.searchList = [];
+    for (i = 0; i < model.defLocations.length; i++) {
+      var item = model.defLocations[i].name;
+      self.dispResultsList.push(item);
+      // We can Uncomment below for Case Insensitive search, we'll
+      // test a little more before we do.
+      self.searchList.push(item.toLowerCase());
+      console.log('Default Names Have Been Pushed');
+    }
+    self.results = ko.observableArray(self.dispResultsList.slice(0));
+  };
+  // Invokes initResults function on our locations.
+  self.dispResults(model.defLocations);
 
   //**********************Search Function***********************//
 
   self.searchF = function() {
-    self.searchResults.removeAll();
+    self.results.removeAll();
 
     for (var i = 0; i < model.markers.length; i++) {
       model.markers[i].setVisible(false);
@@ -242,22 +259,6 @@ function appVM() {
     }
   };
 
-  // Converts location data object's name's to an array then pushes to an
-  // observable.
-  self.dispResults = function(defLocations) {
-    self.dispResultsList = [];
-    self.searchList = [];
-    for (i = 0; i < model.defLocations.length; i++) {
-      var item = model.defLocations[i].name;
-      self.dispResultsList.push(item);
-      // We can Uncomment below for Case Insensitive search, we'll
-      // test a little more before we do.
-      self.searchList.push(item.toLowerCase());
-      console.log('Default Names Have Been Pushed');
-    }
-    self.results = ko.observableArray(self.dispResultsList.slice(0));
-  };
-
   // Our Error Message timer... If fourSquare does not return any results
   // WE RIOT... J/K We only riot if they kill Daryl... We'll just throw an error.
   self.mesTimer = setTimeout(function() {
@@ -306,9 +307,6 @@ function appVM() {
       // swal.close();
     }
   };
-
-  // Invokes initResults function on our locations.
-  self.dispResults(model.defLocations);
   // This fires off the initMap function, setting the markers from the model.
   self.initMap(model.defLocations);
   // This runs the foursquare API call and appends the data returned to the
