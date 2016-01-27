@@ -109,14 +109,14 @@ html, body {
   top: 10px;
   right: 5px;
   width: 300px;
-  height: 315px;
-  overflow-y: scroll;
+  /*height: 315px;*/
+  /*overflow-y: scroll;*/
 }
-#fourSquare::-webkit-scrollbar{
+/*#fourSquare::-webkit-scrollbar{
   display: none;
 }
 #fourSquare::-mozilla-scrollbar{
-  display: none;
+  display: none;*/
 }
 #searchResults {
   display: none;

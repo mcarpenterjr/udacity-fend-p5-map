@@ -1,8 +1,8 @@
 function appVM() {
   var self = this;
-
-  //**********************Map Function***********************//
-
+  // Foursquare ID and Secret Token for the api.
+  var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
+  var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
   // Map Marker Variable.
   var markerBouncing = null;
   // InfoWindow Variable
@@ -10,9 +10,68 @@ function appVM() {
   // Marker and InfoWindow Content Variable and Array.
   var infoWindowHTML = '';
   self.infoWindowHTMLs = [];
-  // Default Location Based off the data in the Model(appM).
-  self.defLatLng = new google.maps.LatLng(model.defLoc[0], model.defLoc[1]);
 
+  // Search term empty Variable.
+  self.searchQuery = ko.observable("");
+  self.searchResults = ko.observableArray([]);
+
+  // Converts location data object's name's to an array then pushes to an
+  // observable.
+  self.dispResults = function(defLocations) {
+    self.dispResultsList = [];
+    self.searchList = [];
+    for (i = 0; i < model.defLocations.length; i++) {
+      var item = model.defLocations[i].name;
+      self.dispResultsList.push(item);
+      // We can Uncomment below for Case Insensitive search, we'll
+      // test a little more before we do.
+      self.searchList.push(item.toLowerCase());
+      console.log('Default Names Have Been Pushed');
+    }
+    self.results = ko.observableArray(self.dispResultsList.slice(0));
+  };
+  // Invokes initResults function on our locations.
+  self.dispResults(model.defLocations);
+
+  //**********************Search Function***********************//
+
+  self.searchF = function() {
+    self.results.removeAll();
+
+    for (var i = 0; i < model.markers.length; i++) {
+      model.markers[i].setVisible(false);
+    }
+    self.searchList.forEach(function(item, index, array) {
+      if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
+        self.results.push(self.dispResultsList[index]);
+
+        model.markers[index].setVisible(true);
+      }
+    });
+
+    //If the filter input is empty, resets all locations to be visible
+    if (self.searchQuery() === '') {
+      self.results(self.dispResultsList.slice(0));
+      model.markers.forEach(function(item, index, array) {
+        if (!item.getVisible()) {
+          item.setVisible(true);
+        }
+      });
+    }
+  }.bind(this);
+
+  self.clearSearch = function() {
+    self.searchQuery('');
+    if (openInfoWindow) openInfoWindow.close();
+    if (markerBouncing) markerBouncing.setAnimation(null);
+    self.searchF();
+    self.map.panTo(self.homelatlng);
+    self.map.setZoom(15);
+  };
+
+  //***************************************************************//
+
+  // Begining of our google map functions.
   function dispMap(latlng) {
     var marker;
     var mapDisp = document.getElementById('map');
@@ -27,6 +86,8 @@ function appVM() {
     return map;
   }
 
+  // Default Location Based off the data in the Model(appM).
+  self.defLatLng = new google.maps.LatLng(model.defLoc[0], model.defLoc[1]);
 
   // Fires Up the Map.
   self.map = dispMap(self.defLatLng);
@@ -41,6 +102,7 @@ function appVM() {
       clickable: true,
       icon: icon
     };
+
     var marker = new google.maps.Marker(markerOptions);
     marker.addListener('click', toggleBounce);
 
@@ -48,6 +110,7 @@ function appVM() {
       content: content,
       position: latlng
     };
+
     var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
     model.infoWindows.push(infoWindow);
 
@@ -69,7 +132,6 @@ function appVM() {
         markerBouncing = null;
       }
     }
-
     return marker;
   }
 
@@ -84,13 +146,14 @@ function appVM() {
   // InfoWindow Toggle-er
   function toggleInfoWindow(id) {
     google.maps.event.trigger(model.markers[id], 'click');
+    $('#fourSquare').hide('slow');
   }
 
   // Function to interate through hardcoded Default Locations
   // and get them on the map.
-  self.setMap = function() {
-    for (var i = 0; i < model.defLocations.length; i++) {
-      var location = model.defLocations[i];
+  self.initMap = function(data) {
+    for (var i = 0; i < data.length; i++) {
+      var location = data[i];
       var gMapLatLong = new google.maps.LatLng(location.lat, location.lng);
       var windowContent = location.name;
       //creates Marker, Adds to map
@@ -98,53 +161,21 @@ function appVM() {
       var marker = addMarker(self.map, gMapLatLong, location.name, windowContent, location.icon);
       // Makrers to Data Model
       model.markers.push(marker);
-      console.log('Pushed New Markers');
+      console.log('Pushed New Makrers');
     }
   };
 
-  // This fires off the setMap function, setting the markers from the model.
-  self.setMap(model.defLocations);
-
-
-  //**************************List Display**********************//
-
-  // Converts location data object's name's to an array then pushes to an
-  // observable.
-  self.dispResults = function() {
-    self.dispResultsList = ko.observableArray([]);
-    self.searchList = [];
-    for (i = 0; i < model.defLocations.length; i++) {
-      var item = model.defLocations[i].name;
-      self.dispResultsList.push(item);
-      // We can Uncomment below for Case Insensitive search, we'll
-      // test a little more before we do.
-      self.searchList.push(item.toLowerCase());
-      console.log('Default Names Have Been Pushed');
-    }
-    self.results = self.dispResultsList.slice(0);
-  };
-
-  // Invokes initResults function on our locations.
-  self.dispResults(model.defLocations);
-
-
-  //**********************API Call Function***********************//
-
-  // Foursquare ID and Secret Token for the api.
-  var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
-  var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
+  // Our Error Message timer... If fourSquare does not return any results
+  // WE RIOT... J/K We only riot if they kill Daryl... We'll just throw an error.
+  self.mesTimer = setTimeout(function() {
+    Materialize.toast("Having trouble connecting, Try again...", 6000);
+  }, 6000);
 
   // Api call to FourSquare, to start pulling Data.
   // If we wanted to get trick, maybe we could put this in a
   // service worker one day.
 
   self.fsApiCall = function(input) {
-    // Our Error Message timer... If fourSquare does not return any results
-    // WE RIOT... J/K We only riot if they kill Daryl... We'll just throw an error.
-    var mesTimer = setTimeout(function() {
-      Materialize.toast("Having trouble connecting, Try again...", 6000);
-    }, 1500);
-
     for (var i = 0; i < input.length; i++) {
       var url = "https://api.foursquare.com/v2/venues/" +
         model.defLocations[i].venue_id +
@@ -153,7 +184,7 @@ function appVM() {
         "&v=20151220";
 
       $.getJSON(url, function(data) {
-        clearTimeout(mesTimer);
+        clearTimeout(appVM.mesTimer);
         model.infoWindows.forEach(function(item, index, array) {
           if (item.content == data.response.venue.name) {
             infoWindowHTML = "<p><strong><a class='place-name' href='" +
@@ -182,19 +213,44 @@ function appVM() {
       // swal.close();
     }
   };
-
+  // This fires off the initMap function, setting the markers from the model.
+  self.initMap(model.defLocations);
   // This runs the foursquare API call and appends the data returned to the
   // map markers.
-  //self.fsApiCall(model.defLocations);
-  //************************************************************//
-
-  //**********************Search Function***********************//
+  self.fsApiCall(model.defLocations);
 
 
-
-  //************************************************************//
+  //**********************************************************************
+  //    API Call with ko.mapping plugin.
+  //    Doesn't work..? Need More research.
+  //
+  //
+  //
+  // self.fsApiKoMap = function(defLocations) {
+  //   for (var i = 0; i < model.defLocations.length; i++) {
+  //     var url = "https://api.foursquare.com/v2/venues/" +
+  //     model.defLocations[i].venue_id +
+  //     "?client_id=" + FSCLIENT_ID +
+  //     "&client_secret=" + FSCLIENT_SECRET +
+  //     "&v=20151220";
+  //
+  //     $.getJSON(url, function(data) {
+  //       clearTimeout(appVM.mesTimer);
+  //       model.infoWindows.forEach(function(item, index, array) {
+  //         if (item.content == data.response.venue.name) {
+  //           ko.mapping.fromJSON(self.fsApiKoMap, koMapping);
+  //         }
+  //       });
+  //     });
+  //   }
+  // };
+  //
+  // var koMapping = ko.mapping.fromJSON(self.fsApiKoMap);
+  //   self.fsApiKoMap(model.defLocations);
+  //
+  //
+  //
+  //
+  //**********************************************************************
 
 }
-
-var appVM = new appVM();
-ko.applyBindings(appVM);

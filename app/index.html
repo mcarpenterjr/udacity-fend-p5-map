@@ -30,14 +30,14 @@
 
   <!-- Results Display -->
   <div id="fourSquare">
-    <ul class="collapsible popout z-depth-5" data-collapsible="accordion">
-      <li data-bind="foreach: results">
-        <div class="collapsible-header"><i class="fa fa-foursquare"></i>
+    <ul class="collection with-header">
+      <li class="collection-header">
+        <h4>Search Results</h4></li>
+      <li class="collection-item" data-bind="foreach: results">
+        <div>
           <a href="#" data-bind="click: $parent.selectedMarker">
             <span data-bind="text: $data"></span>
-          </a>
-        </div>
-        <div class="collapsible-body">
+            <i class="fa fa-foursquare"></i></a>
         </div>
       </li>
     </ul>
