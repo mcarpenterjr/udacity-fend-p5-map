@@ -52,7 +52,7 @@ function model() {
     "venue_id": "4b6a4ab6f964a52000d12be3",
     "business_id": ""
   }, {
-    "name": "The Lodge @ Mont Snow",
+    "name": "The Lodge @ Mount Snow",
     "lat": 42.9648109,
     "lng": -72.8889477,
     "icon": "img/glyphs/33/beer.png",
@@ -354,22 +354,36 @@ function appVM() {
 // Gets some visuals ready when the app first loads.
 var init = function() {
   $(document).ready(function() {
-    $('.collapsible').collapsible({
-      accordion: true
+
+    $('.button-collapse').sideNav({
+      menuWidth: 320, // Default is 240
+      edge: 'left', // Choose the horizontal origin
+      closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
     });
-    $('#showFs').click(function() {
-      $('#fourSquare').toggle('slow');
-    });
-    $('#showSearch').click(function() {
-      $('#searchDisp').toggle('slow');
-    });
+
+    // Shows side Nav
+    // $('.button-collapse').sideNav('show');
+    // Hides Side Nav
+    // $('.button-collapse').sideNav('hide');
+    // Jquery Controls for Round Action button
+    //
+    //  Controls FourSquare List Display
+    //   $('#showFs').click(function() {
+    //     $('#fourSquare').toggle('slow');
+    //   });
+    //  Controls Search Filter Box
+    //   $('#showSearch').click(function() {
+    //     $('#searchDisp').toggle('slow');
+    //   });
   });
+
+
   $(document)
     .ajaxStart(function() {
-      // Stuff Goes Here
+      // Stuff for the start of the ajax call Goes Here
     })
     .ajaxStop(function() {
-      // Stuff goes here
+      // Stuff for after the ajax call goes here
     });
   swal({
     title: "Finding all the spots...",

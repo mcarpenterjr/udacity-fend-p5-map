@@ -14,44 +14,26 @@
 
 <body>
   <div id="map"></div>
-
-  <!-- Filters and Related -->
-  <div id="filters">
-    <div id="searchDisp">
-      <div id="searchInput">
-        <form id="searchBox" class="z-depth-4">
-          <div class="input-field col s6">
-            <input id="search" placeholder="Search. . . " type="text" class="validate" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off" />
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Results Display -->
-  <div id="fourSquare">
-    <ul class="collection with-header">
-      <li class="collection-header">
-        <h4>Search Results</h4></li>
-      <li class="collection-item" data-bind="foreach: results">
-        <div>
+  <ul id="slide-out" class="side-nav fixed">
+    <li>
+      <form id="searchBox" class="search-wrapper card">
+        <div class="input-field">
+          <input id="search" placeholder="Filter. . . " type="text" class="validate" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off" />
+        </div>
+      </form>
+    </li>
+    <li class="no-padding">
+      <li><h4>Results</h4></li>
+      <ul class="collection" data-bind="foreach: results">
+        <li class="collection-item">
           <a href="#" data-bind="click: $parent.selectedMarker">
             <span data-bind="text: $data"></span>
-            <i class="fa fa-foursquare"></i></a>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Action Button -->
-  <div class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;">
-    <a class="btn-floating btn-large red"><i class="fa fa-large fa-bars"></i></a>
-    <ul>
-      <li><a id="showSearch" class="btn-floating yellow darken-1"><i class="fa fa-search"></i></a></li>
-      <li><a id="showFs" class="btn-floating blue"><i class="fa fa-foursquare"></i></a></li>
-      <li><a class="btn-floating green"><i class="fa fa-map-marker"></i></a></li>
-    </ul>
-  </div>
+            <i class="fa fa-foursquare fa-fw"></i></a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <a id="menuToggle" href="#" data-activates="slide-out" class="purple btn-floating btn-large button-collapse"><i class="yellow-text fa fa-bars fa-4x"></i></a>
 
   <!-- Script Stuff -->
 
