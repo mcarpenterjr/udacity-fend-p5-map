@@ -4,78 +4,78 @@ function model() {
   // Hardcoded list of locations
   this.defLocations = [{
     "name": "1900' Burger",
-    "lat": 42.9672693,
-    "lng": -72.8964758,
+    "lat": 42.967257,
+    "lng": -72.894326,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "4d31dc00ceb62d4367ece961",
     "business_id": ""
   }, {
-    "name": "Cuzzins Bar and Grill",
-    "lat": 42.9675362,
-    "lng": -72.8966528,
+    "name": "Cuzzin's Bar & Grill",
+    "lat": 42.967550,
+    "lng": -72.894466,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "4ad4a2a8f964a52073e820e3",
     "business_id": ""
   }, {
-    "name": "The Bull Wheel",
-    "lat": 42.9601797,
-    "lng": -72.9225016,
+    "name": "The Bullwheel",
+    "lat": 42.960147,
+    "lng": -72.920316,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "5298eab7498ea48249ee85cd",
     "business_id": ""
   }, {
     "name": "The Snow Barn",
-    "lat": 42.964592,
-    "lng": -72.892258,
+    "lat": 42.964554,
+    "lng": -72.890084,
     "icon": "img/glyphs/33/music-note.png",
     "venue_id": "41e46880f964a520d01e1fe3",
     "business_id": ""
   }, {
-    "name": "World Class Ski and Sport",
-    "lat": 42.9448568,
-    "lng": -72.8651127,
+    "name": "World Class Ski & Sport",
+    "lat": 42.944819,
+    "lng": -72.862898,
     "icon": "img/glyphs/33/bag.png",
     "venue_id": "4f48f75ae4b0291e48e4d5ce",
     "business_id": ""
   }, {
-    "name": "Dover Joe's",
-    "lat": 42.9501808,
-    "lng": -72.8779057,
+    "name": "West Dover Joe's",
+    "lat": 42.950167,
+    "lng": -72.875721,
     "icon": "img/glyphs/33/fork.png",
     "venue_id": "4d445b4ae198721e3fd4ba8b",
     "business_id": ""
   }, {
-    "name": "The Valley View Saloon",
-    "lat": 42.395519,
-    "lng": -72.856280,
+    "name": "Valley View Saloon",
+    "lat": 42.939566,
+    "lng": -72.854099,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "4b6a4ab6f964a52000d12be3",
     "business_id": ""
   }, {
-    "name": "The Lodge @ Mount Snow",
-    "lat": 42.9648109,
-    "lng": -72.8889477,
+    "name": "The Lodge at Mount Snow",
+    "lat": 42.964807,
+    "lng": -72.886772,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "4bc0d88d4cdfc9b68d989321",
     "business_id": ""
   }, {
     "name": "Snow Lake Lodge",
-    "lat": 42.9644927,
-    "lng": -72.8901137,
+    "lat": 42.964483,
+    "lng": -72.887932,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "4b5a3af9f964a5200ab628e3",
     "business_id": ""
   }, {
-    "name": "The Matterhorn Inn",
-    "lat": 42.9496089,
-    "lng": -72.8745406,
+    "name": "Matterhorn Inn",
+    "lat": 42.949581,
+    "lng": -72.872355,
     "icon": "img/glyphs/33/beer.png",
     "venue_id": "4b8c88e6f964a52087d532e3",
     "business_id": ""
   }, {
     "name": "Sports Odyssey",
-    "lat": 42.9484209,
-    "lng": -72.8725026,
+    "lat": 42.948423,
+    "lng": -72.870308,
     "icon": "img/glyphs/33/bag.png",
     "venue_id": "4cb0985fdb32f04dca06c14d",
     "business_id": ""
@@ -198,7 +198,11 @@ function appVM() {
     };
 
     var marker = new google.maps.Marker(markerOptions);
-    marker.addListener('click', toggleBounce);
+    marker.addListener('click', function() {
+      toggleBounce;
+      map.setZoom(17);
+      map.setCenter(marker.getPosition());
+    });
 
     var infoWindowOptions = {
       content: content,
@@ -213,7 +217,11 @@ function appVM() {
       openInfoWindow = infoWindow;
       infoWindow.open(map, marker);
     });
-    google.maps.event.addListener(infoWindow, 'closeclick', toggleBounce);
+    google.maps.event.addListener(infoWindow, 'closeclick', function() {
+      toggleBounce;
+      map.setZoom(14);
+      map.setCenter(self.defLatLng);
+    });
 
     function toggleBounce() {
       if (markerBouncing) {
@@ -255,7 +263,7 @@ function appVM() {
       var marker = addMarker(self.map, gMapLatLong, location.name, windowContent, location.icon);
       // Makrers to Data Model
       model.markers.push(marker);
-      console.log('Pushed New Makrers');
+      console.log('Pushed New Markers');
     }
   };
 
