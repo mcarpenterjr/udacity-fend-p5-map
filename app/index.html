@@ -14,26 +14,26 @@
 
 <body>
   <div id="map"></div>
-  <ul id="slide-out" class="side-nav fixed">
-    <li>
+  <ul id="slide-out" class="side-nav fixed amber darken-3">
+    <li  class="amber darken-3">
       <form id="searchBox" class="search-wrapper card">
-        <div class="input-field">
-          <input id="search" placeholder="Filter. . . " type="text" class="validate" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off" />
+        <div class="input-field amber lighten-1">
+          <input id="search" placeholder="Search. . ." type="text" class="validate blue-text text-darken-1" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off"/>
         </div>
       </form>
     </li>
-    <li class="no-padding">
-      <li><h4>Results</h4></li>
+    <li class="no-padding" class="amber lighten-1">
+      <li class="amber blue-text text-darken-1 card"><h4>Results</h4></li>
       <ul class="collection" data-bind="foreach: results">
-        <li class="collection-item">
+        <li class="no-padding collection-item amber lighten-1">
           <a href="#" data-bind="click: $parent.selectedMarker">
-            <span data-bind="text: $data"></span>
-            <i class="fa fa-foursquare fa-fw"></i></a>
+            <span class="blue-text text-darken-1" data-bind="text: $data"></span>
+            <i class="fa fa-foursquare fa-fw pink-text text-lighten-1"></i></a>
         </li>
       </ul>
     </li>
   </ul>
-  <a id="menuToggle" href="#" data-activates="slide-out" class="purple btn-floating btn-large button-collapse"><i class="yellow-text fa fa-bars fa-4x"></i></a>
+  <a id="menuToggle" href="#" data-activates="slide-out" class="amber btn waves-effect waves-dark button-collapse"><i class="blue-text text-darken-1 fa fa-bars fa-4x"></i></a>
 
   <!-- Script Stuff -->
 

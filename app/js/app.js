@@ -281,22 +281,8 @@ function appVM() {
         clearTimeout(appVM.mesTimer);
         model.infoWindows.forEach(function(item, index, array) {
           if (item.content == data.response.venue.name) {
-            infoWindowHTML = "<p><strong><a class='place-name' href='" +
-              data.response.venue.canonicalUrl + "'>" +
-              data.response.venue.name +
-              "</a></strong></p>" +
-              "<p>" + data.response.venue.location.address +
-              "</p><p><span class='place-rating'><strong>" +
-              data.response.venue.rating +
-              "</strong><sup> / 10</sup></span>" +
-              "<span class='place-category'>" +
-              data.response.venue.categories[0].name +
-              "</p><p>" + data.response.venue.hereNow.count +
-              " people checked-in now</p>" +
-              "<img src='" + data.response.venue.photos.groups[0].items[0].prefix +
-              "80x80" +
-              data.response.venue.photos.groups[0].items[0].suffix +
-              "'</img>";
+            infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
+              "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
             item.setContent(infoWindowHTML);
             console.log('Info Window Content Good');
           } else {
