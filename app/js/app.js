@@ -55,21 +55,21 @@ function model() {
     "name": "The Lodge at Mount Snow",
     "lat": 42.964807,
     "lng": -72.886772,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/33/bed.png",
     "venue_id": "4bc0d88d4cdfc9b68d989321",
     "business_id": ""
   }, {
     "name": "Snow Lake Lodge",
     "lat": 42.964483,
     "lng": -72.887932,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/33/bed.png",
     "venue_id": "4b5a3af9f964a5200ab628e3",
     "business_id": ""
   }, {
     "name": "Matterhorn Inn",
     "lat": 42.949581,
     "lng": -72.872355,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/33/bed.png",
     "venue_id": "4b8c88e6f964a52087d532e3",
     "business_id": ""
   }, {
@@ -194,7 +194,8 @@ function appVM() {
       title: title,
       animation: google.maps.Animation.DROP,
       clickable: true,
-      icon: icon
+      icon: icon,
+      labelClass: 'mrkrLbl'
     };
 
     var marker = new google.maps.Marker(markerOptions);

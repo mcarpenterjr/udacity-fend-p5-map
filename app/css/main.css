@@ -16,3 +16,8 @@ html, body {
   top: 25px;
   left: 25px;
 }
+.mrkrLbl {
+  background-color: rgba(255, 0, 0, 0.5);
+  border-radius: 3px;
+  overflow: hidden;
+}
