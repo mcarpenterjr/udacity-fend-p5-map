@@ -55,21 +55,21 @@ function model() {
     "name": "The Lodge at Mount Snow",
     "lat": 42.964807,
     "lng": -72.886772,
-    "icon": "img/glyphs/33/bed.png",
+    "icon": "img/glyphs/hotel.svg",
     "venue_id": "4bc0d88d4cdfc9b68d989321",
     "business_id": ""
   }, {
     "name": "Snow Lake Lodge",
     "lat": 42.964483,
     "lng": -72.887932,
-    "icon": "img/glyphs/33/bed.png",
+    "icon": "img/glyphs/hotel.svg",
     "venue_id": "4b5a3af9f964a5200ab628e3",
     "business_id": ""
   }, {
     "name": "Matterhorn Inn",
     "lat": 42.949581,
     "lng": -72.872355,
-    "icon": "img/glyphs/33/bed.png",
+    "icon": "img/glyphs/campfire.svg",
     "venue_id": "4b8c88e6f964a52087d532e3",
     "business_id": ""
   }, {
@@ -195,7 +195,6 @@ function appVM() {
       animation: google.maps.Animation.DROP,
       clickable: true,
       icon: icon,
-      labelClass: 'mrkrLbl'
     };
 
     var marker = new google.maps.Marker(markerOptions);
@@ -222,6 +221,7 @@ function appVM() {
       toggleBounce;
       map.setZoom(14);
       map.setCenter(self.defLatLng);
+      $('.button-collapse').sideNav('show');
     });
 
     function toggleBounce() {
@@ -249,7 +249,6 @@ function appVM() {
   // InfoWindow Toggle-er
   function toggleInfoWindow(id) {
     google.maps.event.trigger(model.markers[id], 'click');
-    $('#fourSquare').hide('slow');
   }
 
   // Function to interate through hardcoded Default Locations
@@ -299,7 +298,6 @@ function appVM() {
           }
         });
       });
-      // swal.close();
     }
   };
   // This fires off the initMap function, setting the markers from the model.
@@ -356,20 +354,6 @@ var init = function() {
       closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
     });
 
-    // Shows side Nav
-    // $('.button-collapse').sideNav('show');
-    // Hides Side Nav
-    // $('.button-collapse').sideNav('hide');
-    // Jquery Controls for Round Action button
-    //
-    //  Controls FourSquare List Display
-    //   $('#showFs').click(function() {
-    //     $('#fourSquare').toggle('slow');
-    //   });
-    //  Controls Search Filter Box
-    //   $('#showSearch').click(function() {
-    //     $('#searchDisp').toggle('slow');
-    //   });
   });
 
 
@@ -381,7 +365,7 @@ var init = function() {
       // Stuff for after the ajax call goes here
     });
   swal({
-    title: "Finding all the spots...",
+    title: "Fetching Locations",
     text: '<div class="preloader-wrapper big active">' +
       '<div class="spinner-layer spinner-red-only">' +
       '<div class="circle-clipper left">' +

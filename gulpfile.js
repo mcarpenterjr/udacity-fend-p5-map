@@ -16,6 +16,7 @@ var webFonts = require('gulp-google-webfonts');
 var notify = require('gulp-notify');
 var cache = require('gulp-cache');
 var livereload = require('gulp-livereload');
+var svg2png = require('gulp-svg2png');
 var reload = browserSync.reload;
 var del = require('del');
 
@@ -26,7 +27,8 @@ var paths = {
   styles: ['app/css/**/*.css'],
   scripts: ['app/js/**/*.js'],
   images: ['app/img/**/*'],
-  icons: ['app/img/glyphs/512/*'],
+  icons: ['app/img/glyphs/*'],
+  iconsTMP: ['app/img/glyphs/tmp'],
 };
 
 
@@ -80,13 +82,24 @@ gulp.task('watch', function() {
 gulp.task('default', ['watch', 'scripts', 'images']);
 
 // Simple task for building ICONS
-gulp.task('icon-builder-33', function() {
+gulp.task('ico-33TMP', function() {
   return gulp.src(paths.icons)
     .pipe(imgResize({
       width: 33,
+      crop: true,
+      upscale: false,
+      imageMagick: true,
+    }))
+    .pipe(gulp.dest('app/img/glyphs/tmp'))
+  });
+  gulp.task('ico-33', function() {
+  return gulp.src('app/img/glyphs/tmp')
+    .pipe(imgResize({
+      width: 33,
       height: 33,
-      crop: false,
-      upscale:false
+      crop: true,
+      upscale: false
     }))
     .pipe(gulp.dest('app/img/glyphs/33'))
+  return del(iconTMP);
 });

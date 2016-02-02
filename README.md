@@ -57,3 +57,11 @@ It is highly advisable to change the output directory ( `.pipe(gulp.dest('app/im
 
 ## Hard Coded Locations
 Main area is West Dover, VT
+
+## Powered by...
+Hotel Sign by icon 54 from the Noun Project
+Beer by Edward Boatman from the Noun Project
+singer by riyazali from the Noun Project
+Campfire by parkjisun from the Noun Project
+Store by Edward Boatman from the Noun Project
+skis by Creative Stall from the Noun Project

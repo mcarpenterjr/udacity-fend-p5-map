@@ -13,7 +13,7 @@ html, body {
 }
 #menuToggle {
   position: absolute;
-  top: 25px;
+  top: -3px;
   left: 25px;
 }
 .mrkrLbl {
