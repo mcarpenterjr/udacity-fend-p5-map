@@ -6,77 +6,77 @@ function model() {
     "name": "1900' Burger",
     "lat": 42.967257,
     "lng": -72.894326,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "4d31dc00ceb62d4367ece961",
     "business_id": ""
   }, {
     "name": "Cuzzin's Bar & Grill",
     "lat": 42.967550,
     "lng": -72.894466,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "4ad4a2a8f964a52073e820e3",
     "business_id": ""
   }, {
     "name": "The Bullwheel",
     "lat": 42.960147,
     "lng": -72.920316,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "5298eab7498ea48249ee85cd",
     "business_id": ""
   }, {
     "name": "The Snow Barn",
     "lat": 42.964554,
     "lng": -72.890084,
-    "icon": "img/glyphs/33/music-note.png",
+    "icon": "img/glyphs/gm-music.svg",
     "venue_id": "41e46880f964a520d01e1fe3",
     "business_id": ""
   }, {
     "name": "World Class Ski & Sport",
     "lat": 42.944819,
     "lng": -72.862898,
-    "icon": "img/glyphs/33/bag.png",
+    "icon": "img/glyphs/gm-shopping.svg",
     "venue_id": "4f48f75ae4b0291e48e4d5ce",
     "business_id": ""
   }, {
     "name": "West Dover Joe's",
     "lat": 42.950167,
     "lng": -72.875721,
-    "icon": "img/glyphs/33/fork.png",
+    "icon": "img/glyphs/gm-food.svg",
     "venue_id": "4d445b4ae198721e3fd4ba8b",
     "business_id": ""
   }, {
     "name": "Valley View Saloon",
     "lat": 42.939566,
     "lng": -72.854099,
-    "icon": "img/glyphs/33/beer.png",
+    "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "4b6a4ab6f964a52000d12be3",
     "business_id": ""
   }, {
     "name": "The Lodge at Mount Snow",
     "lat": 42.964807,
     "lng": -72.886772,
-    "icon": "img/glyphs/hotel.svg",
+    "icon": "img/glyphs/gm-hotel.svg",
     "venue_id": "4bc0d88d4cdfc9b68d989321",
     "business_id": ""
   }, {
     "name": "Snow Lake Lodge",
     "lat": 42.964483,
     "lng": -72.887932,
-    "icon": "img/glyphs/hotel.svg",
+    "icon": "img/glyphs/gm-hotel.svg",
     "venue_id": "4b5a3af9f964a5200ab628e3",
     "business_id": ""
   }, {
     "name": "Matterhorn Inn",
     "lat": 42.949581,
     "lng": -72.872355,
-    "icon": "img/glyphs/campfire.svg",
+    "icon": "img/glyphs/gm-campfire.svg",
     "venue_id": "4b8c88e6f964a52087d532e3",
     "business_id": ""
   }, {
     "name": "Sports Odyssey",
     "lat": 42.948423,
     "lng": -72.870308,
-    "icon": "img/glyphs/33/bag.png",
+    "icon": "img/glyphs/gm-shopping.svg",
     "venue_id": "4cb0985fdb32f04dca06c14d",
     "business_id": ""
   }];
