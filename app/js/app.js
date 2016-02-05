@@ -1,7 +1,17 @@
 function model() {
   var self = this;
 
-  // Hardcoded list of locations
+  /**
+  * @description Hard Coded locations
+  * @param name: string holding the locations name
+  * @param lat: the lattitude of the location
+  * @param lng: the longitude of the location
+  * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
+  *         ideally the icon would be no more than 50px X 65px
+  * @param venue_id: string containing the fourSquare venue ID
+  * @param business_id: string containing the Yelp business ID
+  */
+
   this.defLocations = [{
     "name": "1900' Burger",
     "lat": 42.967257,
@@ -109,8 +119,17 @@ function appVM() {
   self.searchQuery = ko.observable("");
   self.searchResults = ko.observableArray([]);
 
-  // Converts location data object's name's to an array then pushes to an
-  // observable.
+  /**
+  * @description Hard Coded locations
+  * @param name: string holding the locations name
+  * @param lat: the lattitude of the location
+  * @param lng: the longitude of the location
+  * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
+  *         ideally the icon would be no more than 50px X 65px
+  * @param venue_id: string containing the fourSquare venue ID
+  * @param business_id: string containing the Yelp business ID
+  */
+
   self.dispResults = function(defLocations) {
     self.dispResultsList = [];
     self.searchList = [];
@@ -127,7 +146,16 @@ function appVM() {
   // Invokes initResults function on our locations.
   self.dispResults(model.defLocations);
 
-  //**********************Search Function***********************//
+  /**
+  * @description Hard Coded locations
+  * @param name: string holding the locations name
+  * @param lat: the lattitude of the location
+  * @param lng: the longitude of the location
+  * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
+  *         ideally the icon would be no more than 50px X 65px
+  * @param venue_id: string containing the fourSquare venue ID
+  * @param business_id: string containing the Yelp business ID
+  */
 
   self.searchF = function() {
     self.results.removeAll();
@@ -199,7 +227,6 @@ function appVM() {
 
     var marker = new google.maps.Marker(markerOptions);
     marker.addListener('click', function() {
-      toggleBounce;
       map.setZoom(17);
       map.setCenter(marker.getPosition());
     });
@@ -216,12 +243,13 @@ function appVM() {
       if (openInfoWindow) openInfoWindow.close();
       openInfoWindow = infoWindow;
       infoWindow.open(map, marker);
+      toggleBounce();
     });
     google.maps.event.addListener(infoWindow, 'closeclick', function() {
-      toggleBounce;
       map.setZoom(14);
       map.setCenter(self.defLatLng);
       $('.button-collapse').sideNav('show');
+      toggleBounce();
     });
 
     function toggleBounce() {
@@ -306,40 +334,6 @@ function appVM() {
   // map markers.
   self.fsApiCall(model.defLocations);
 
-
-  //**********************************************************************
-  //    API Call with ko.mapping plugin.
-  //    Doesn't work..? Need More research.
-  //
-  //
-  //
-  // self.fsApiKoMap = function(defLocations) {
-  //   for (var i = 0; i < model.defLocations.length; i++) {
-  //     var url = "https://api.foursquare.com/v2/venues/" +
-  //     model.defLocations[i].venue_id +
-  //     "?client_id=" + FSCLIENT_ID +
-  //     "&client_secret=" + FSCLIENT_SECRET +
-  //     "&v=20151220";
-  //
-  //     $.getJSON(url, function(data) {
-  //       clearTimeout(appVM.mesTimer);
-  //       model.infoWindows.forEach(function(item, index, array) {
-  //         if (item.content == data.response.venue.name) {
-  //           ko.mapping.fromJSON(self.fsApiKoMap, koMapping);
-  //         }
-  //       });
-  //     });
-  //   }
-  // };
-  //
-  // var koMapping = ko.mapping.fromJSON(self.fsApiKoMap);
-  //   self.fsApiKoMap(model.defLocations);
-  //
-  //
-  //
-  //
-  //**********************************************************************
-
 }
 
 //------------------------------------------------------------------------
@@ -365,18 +359,24 @@ var init = function() {
       // Stuff for after the ajax call goes here
     });
   swal({
-    title: "Fetching Locations",
-    text: '<div class="preloader-wrapper big active">' +
-      '<div class="spinner-layer spinner-red-only">' +
-      '<div class="circle-clipper left">' +
-      '<div class="circle"></div></div>' +
-      '<div class="gap-patch"><div class="circle">' +
-      '</div></div><div class="circle-clipper right">' +
-      '<div class="circle"></div></div></div>',
+    title: "Loading. . .",
+    text: '<div class="progress"><div class="indeterminate"></div></div>' +
+      '<div class="card blue-grey darken-1">' +
+      '<div class="card-content white-text">' +
+      '<p>Here are some Awesome places to check out in West Dover, Vermont.' +
+      'You will be able to explore some great places to shop, grab a drink, ' +
+      'party, shop and stay all near the Mount Snow Ski Resort.</p>' +
+      '</br><span>Powered By, FourSquare <i class="fa fa-foursquare fa-fw pink-text text-lighten-1"></i>' +
+      ' and Google Maps <i class="fa fa-foursquare fa-map-o pink-text text-lighten-1"></i></span>' +
+      '</div>' +
+      '</div>' +
+      '</div>',
     showCancelButton: false,
-    showConfirmButton: false,
+    showConfirmButton: true,
+    confirmButtonText: "Let's Go!",
+    confirmButtonColor: "#ffb300",
     html: true,
-    timer: 3150
+    timer: 20000,
   });
 };
 

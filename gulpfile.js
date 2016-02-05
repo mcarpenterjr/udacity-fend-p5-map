@@ -67,9 +67,9 @@ gulp.task('browser-sync', function() {
     server: './app'
   });
 
-  gulp.watch('app/css/*.css').on('change', reload);
-  gulp.watch('app/js/*.js').on('change', reload);
-  gulp.watch('app/*.html').on('change', reload);
+  gulp.watch(paths.styles).on('change', reload);
+  gulp.watch(paths.scripts).on('change', reload);
+  gulp.watch(paths.content).on('change', reload);
 });
 
 // Rerun the task when a file changes
@@ -79,27 +79,4 @@ gulp.task('watch', function() {
 });
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['watch', 'scripts', 'images']);
-
-// Simple task for building ICONS
-gulp.task('ico-33TMP', function() {
-  return gulp.src(paths.icons)
-    .pipe(imgResize({
-      width: 33,
-      crop: true,
-      upscale: false,
-      imageMagick: true,
-    }))
-    .pipe(gulp.dest('app/img/glyphs/tmp'))
-  });
-  gulp.task('ico-33', function() {
-  return gulp.src('app/img/glyphs/tmp')
-    .pipe(imgResize({
-      width: 33,
-      height: 33,
-      crop: true,
-      upscale: false
-    }))
-    .pipe(gulp.dest('app/img/glyphs/33'))
-  return del(iconTMP);
-});
+gulp.task('default', ['browser-sync']);

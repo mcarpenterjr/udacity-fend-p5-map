@@ -15,17 +15,17 @@
 <body>
   <div id="map"></div>
   <ul id="slide-out" class="side-nav fixed amber darken-3">
-    <li  class="amber darken-3">
-      <form id="searchBox" class="search-wrapper card">
-        <div class="input-field amber lighten-1">
+    <li  class="amber darken-1">
+      <form id="searchBox">
+        <div class="input-field hoverable">
           <input id="search" placeholder="Search. . ." type="text" class="validate blue-text text-darken-1" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off"/>
         </div>
       </form>
     </li>
     <li class="no-padding" class="amber lighten-1">
-      <li class="amber blue-text text-darken-1 card"><h4>Results</h4></li>
+      <li class="amber blue-text text-darken-1 card"><h5 class="center-align">Awesome Places</h5></li>
       <ul class="collection" data-bind="foreach: results">
-        <li class="no-padding collection-item amber lighten-1">
+        <li class="no-padding collection-item amber darken-1">
           <a href="#" data-bind="click: $parent.selectedMarker">
             <span class="blue-text text-darken-1" data-bind="text: $data"></span>
             <i class="fa fa-foursquare fa-fw pink-text text-lighten-1"></i></a>
@@ -37,7 +37,7 @@
 
   <!-- Script Stuff -->
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM&libraries=places,visualization">
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM">
   </script>
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/materialize.js"></script>

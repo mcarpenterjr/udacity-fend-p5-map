@@ -7,53 +7,42 @@ Use git to clone this repository into your chosen working directory.
 #### Then...
 **Open You're Favorite CLI and Start Pluggin' Away!**
 
-### Install Node
-_Node Install Instructions Go Here_
-You can install nodeJs by following the instructions here...
-[NODEjs](https://nodejs.org/en/download/)
-This should also install NPM _(Node Package Manager)_.
+### Requirements
 
-## Installation
-run the following commands from the project directory
+- nodeJs
+- npm (comes built into nodeJs)
+- gulp
+- bower
 
-`npm install`
+#### NPM
+[Get nodeJs here][NPM].
 
-Then
+Once node is installed you can open a bash and run
+`npm install` if all dev dependencies from the package file do not install you may have to run `npm install -f` this will force the download and installation of all dependencies. I noticed this issue when cloning the repository to my other development stations.
 
-`npm update`
+#### bower
+[More about Bower Here][BOWER]
 
-followed by
+While it is not 100% required to run the project, installing bower and related project packages, will help with future development. Run `bower install` if all project dependencies do not install try `bower install -f` this will force the download and installation of dependencies. This too was an issue when clonig to my other development stations.
 
-`npm install --global bower`
+### Using gulp
 
-Then
+_Gulp should have been installed by bower, and most of the packages required should have installed with npm. If not run `bower install --save -dev gulp`_
 
-`bower install`
+Why gulp and not grunt? We don't have that many tasks that require automation, Gulp also lends it's self to ease of use and build streams. Keeping the development of this project simple and straight forward.
 
-followed by
+**Preview the build right away with `gulp`**
 
-`bower update`
+##### Gulp Default Task
 
-_Running install followed by update is redundant
-but this aides in preventing packages from not installing._
+The `gulp` default task. This launches a preview of the actual development build located in the `app/` directory. The stream is dependent on `browser-sync` and watches the `app/js/`, `app/css/`, `app/img/` and `app/` directories for any changes to `.js`, `.css` or `.html` files.
+[More on gulp-browser-sync here][BRSNC]
 
-All required node packages, and bower components should be installed and the app development envirement should be setup.
+_There is alot you can do with browser-sync_
+
+#### The Build Task
 
 
-## Using gulp
-
-this app uses gulp as it's streaming build tool. below you will find some useful commands for building, testing, and optimising the app.
-
-##### browserSync
-
-use `gulp browser-sync` from the command line, this will launch the development version of the app with live reload. Watching for changes to `.html`  `.css`  `.js` files.
-
-#### icon-builder-XX
-
-use `gulp icon-builder-33` to launch a gulp task that resizes the glyphicons down to a usable icon size for usage through out the app.
-
-The task can be modified to build other sizes also. Looking for the task in the gulp file, changing the `height:` and `width:` values will adjust the size of the icons output.
-It is highly advisable to change the output directory ( `.pipe(gulp.dest('app/img/glyphs/33'))` ), when changing icon sizes, this will maintain a level of organization.
 
 ## Hard Coded Locations
 Main area is West Dover, VT
@@ -65,3 +54,7 @@ singer by riyazali from the Noun Project
 Campfire by parkjisun from the Noun Project
 Store by Edward Boatman from the Noun Project
 skis by Creative Stall from the Noun Project
+
+[NPM]: (https://npmjs.org)
+[BOWER]: (https://bower.io)
+[BRSNC]: (https://www.browsersync.io/docs/gulp/)
