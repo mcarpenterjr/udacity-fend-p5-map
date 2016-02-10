@@ -2,101 +2,92 @@ function model() {
   var self = this;
 
   /**
-  * @description Hard Coded locations
-  * @param name: string holding the locations name
-  * @param lat: the lattitude of the location
-  * @param lng: the longitude of the location
-  * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
-  *         ideally the icon would be no more than 50px X 65px
-  * @param venue_id: string containing the fourSquare venue ID
-  * @param business_id: string containing the Yelp business ID
-  */
+   * @description Hard Coded locations
+   * @param name: string holding the locations name
+   * @param loc: Array for location [lattitude, longitude, zoom]
+   * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
+   *         ideally the icon would be no more than 50px X 65px
+   * @param venue_id: string containing the fourSquare venue ID
+   * @param business_id: string containing the Yelp business ID
+   */
 
   this.defLocations = [{
     "name": "1900' Burger",
-    "lat": 42.967257,
-    "lng": -72.894326,
+    "loc": [42.967257, -72.894326, 17],
     "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "4d31dc00ceb62d4367ece961",
     "business_id": ""
   }, {
     "name": "Cuzzin's Bar & Grill",
-    "lat": 42.967550,
-    "lng": -72.894466,
+    "loc": [42.967550, -72.894466, 17],
     "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "4ad4a2a8f964a52073e820e3",
     "business_id": ""
   }, {
     "name": "The Bullwheel",
-    "lat": 42.960147,
-    "lng": -72.920316,
+    "loc": [42.960147, -72.920316, 17],
     "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "5298eab7498ea48249ee85cd",
     "business_id": ""
   }, {
     "name": "The Snow Barn",
-    "lat": 42.964554,
-    "lng": -72.890084,
+    "loc": [42.964554, -72.890084, 17],
     "icon": "img/glyphs/gm-music.svg",
     "venue_id": "41e46880f964a520d01e1fe3",
     "business_id": ""
   }, {
     "name": "World Class Ski & Sport",
-    "lat": 42.944819,
-    "lng": -72.862898,
+    "loc": [42.944819, -72.862898, 17],
     "icon": "img/glyphs/gm-shopping.svg",
     "venue_id": "4f48f75ae4b0291e48e4d5ce",
     "business_id": ""
   }, {
     "name": "West Dover Joe's",
-    "lat": 42.950167,
-    "lng": -72.875721,
+    "loc": [42.950167, -72.875721, 17],
     "icon": "img/glyphs/gm-food.svg",
     "venue_id": "4d445b4ae198721e3fd4ba8b",
     "business_id": ""
   }, {
     "name": "Valley View Saloon",
-    "lat": 42.939566,
-    "lng": -72.854099,
+    "loc": [42.939566, -72.854099, 17],
     "icon": "img/glyphs/gm-beer.svg",
     "venue_id": "4b6a4ab6f964a52000d12be3",
     "business_id": ""
   }, {
     "name": "The Lodge at Mount Snow",
-    "lat": 42.964807,
-    "lng": -72.886772,
+    "loc": [42.964807, -72.886772, 17],
     "icon": "img/glyphs/gm-hotel.svg",
     "venue_id": "4bc0d88d4cdfc9b68d989321",
     "business_id": ""
   }, {
     "name": "Snow Lake Lodge",
-    "lat": 42.964483,
-    "lng": -72.887932,
+    "loc": [42.964483, -72.887932, 17],
     "icon": "img/glyphs/gm-hotel.svg",
     "venue_id": "4b5a3af9f964a5200ab628e3",
     "business_id": ""
   }, {
     "name": "Matterhorn Inn",
-    "lat": 42.949581,
-    "lng": -72.872355,
+    "loc": [42.949581, -72.872355, 17],
     "icon": "img/glyphs/gm-campfire.svg",
     "venue_id": "4b8c88e6f964a52087d532e3",
     "business_id": ""
   }, {
     "name": "Sports Odyssey",
-    "lat": 42.948423,
-    "lng": -72.870308,
+    "loc": [42.948423, -72.870308, 17],
     "icon": "img/glyphs/gm-shopping.svg",
     "venue_id": "4cb0985fdb32f04dca06c14d",
     "business_id": ""
   }];
 
-  //Set the home location coordinates to initialize the map here
+  // Set the home location coordinates to initialize the map here
   self.defLoc = [42.9557093, -72.8923977, 14];
 
-  //Create an empty array to store a list of map markers
+  // Create an empty array to store a list of map markers
   self.markers = [];
   self.infoWindows = [];
+
+  // Empty Variable for GeoLocation
+  self.currentLoc = [];
 }
 var model = new model();
 
@@ -107,7 +98,7 @@ function appVM() {
   // Foursquare ID and Secret Token for the api.
   var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
   var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
-  // Map Marker Variable.
+    // Map Marker Variable.
   var markerBouncing = null;
   // InfoWindow Variable
   var openInfoWindow = null;
@@ -120,25 +111,23 @@ function appVM() {
   self.searchResults = ko.observableArray([]);
 
   /**
-  * @description Hard Coded locations
-  * @param name: string holding the locations name
-  * @param lat: the lattitude of the location
-  * @param lng: the longitude of the location
-  * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
-  *         ideally the icon would be no more than 50px X 65px
-  * @param venue_id: string containing the fourSquare venue ID
-  * @param business_id: string containing the Yelp business ID
-  */
+   * @description Hard Coded locations
+   * @param name: string holding the locations name
+   * @param lat: the lattitude of the location
+   * @param lng: the longitude of the location
+   * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
+   *         ideally the icon would be no more than 50px X 65px
+   * @param venue_id: string containing the fourSquare venue ID
+   * @param business_id: string containing the Yelp business ID
+   */
 
   self.dispResults = function(defLocations) {
     self.dispResultsList = [];
-    self.searchList = [];
+    self.searchables = [];
     for (i = 0; i < model.defLocations.length; i++) {
       var item = model.defLocations[i].name;
       self.dispResultsList.push(item);
-      // We can Uncomment below for Case Insensitive search, we'll
-      // test a little more before we do.
-      self.searchList.push(item.toLowerCase());
+      self.searchables.push(item.toLowerCase());
       console.log('Default Names Have Been Pushed');
     }
     self.results = ko.observableArray(self.dispResultsList.slice(0));
@@ -147,15 +136,15 @@ function appVM() {
   self.dispResults(model.defLocations);
 
   /**
-  * @description Hard Coded locations
-  * @param name: string holding the locations name
-  * @param lat: the lattitude of the location
-  * @param lng: the longitude of the location
-  * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
-  *         ideally the icon would be no more than 50px X 65px
-  * @param venue_id: string containing the fourSquare venue ID
-  * @param business_id: string containing the Yelp business ID
-  */
+   * @description Hard Coded locations
+   * @param name: string holding the locations name
+   * @param lat: the lattitude of the location
+   * @param lng: the longitude of the location
+   * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
+   *         ideally the icon would be no more than 50px X 65px
+   * @param venue_id: string containing the fourSquare venue ID
+   * @param business_id: string containing the Yelp business ID
+   */
 
   self.searchF = function() {
     self.results.removeAll();
@@ -163,7 +152,7 @@ function appVM() {
     for (var i = 0; i < model.markers.length; i++) {
       model.markers[i].setVisible(false);
     }
-    self.searchList.forEach(function(item, index, array) {
+    self.searchables.forEach(function(item, index, array) {
       if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
         self.results.push(self.dispResultsList[index]);
 
@@ -188,7 +177,7 @@ function appVM() {
     if (markerBouncing) markerBouncing.setAnimation(null);
     self.searchF();
     self.map.panTo(self.homelatlng);
-    self.map.setZoom(15);
+    self.map.setZoom(model.defLoc[2]);
   };
 
   //***************************************************************//
@@ -199,7 +188,7 @@ function appVM() {
     var mapDisp = document.getElementById('map');
     var gLatLng = latlng;
     var mapOptions = {
-      zoom: 14,
+      zoom: model.defLoc[2],
       mapTypeId: google.maps.MapTypeId.HYBRID,
       center: gLatLng,
       disableDefaultUI: true
@@ -246,7 +235,7 @@ function appVM() {
       toggleBounce();
     });
     google.maps.event.addListener(infoWindow, 'closeclick', function() {
-      map.setZoom(14);
+      map.setZoom(model.defLoc[2]);
       map.setCenter(self.defLatLng);
       $('.button-collapse').sideNav('show');
       toggleBounce();
@@ -284,7 +273,7 @@ function appVM() {
   self.initMap = function(data) {
     for (var i = 0; i < data.length; i++) {
       var location = data[i];
-      var gMapLatLong = new google.maps.LatLng(location.lat, location.lng);
+      var gMapLatLong = new google.maps.LatLng(location.loc[0], location.loc[1]);
       var windowContent = location.name;
       //creates Marker, Adds to map
       // we need to add this once we find PNG or SVG Icons (location.icon)
@@ -328,11 +317,33 @@ function appVM() {
       });
     }
   };
+
+
+  //***************************************************************//
+  // Our Wether Function
+
+  // Weather API Key
+  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f'
+  // Empty Variable for weather Data
+  var weatherData = ko.observableArray([]);
+
+  self.weatherReport = function() {
+    var url = "http://api.openweathermap.org/data/2.5/weather?" +
+      "lat=" + model.defLoc[0] + "&lon=" + model.defLoc[1] +
+      "&units=imperial&APPID=" + WEATHER_KEY;
+
+    $.getJSON(url, function(data) {
+      console.log(data);
+      current = ko.mapping.fromJSON(data);
+    });
+  };
   // This fires off the initMap function, setting the markers from the model.
   self.initMap(model.defLocations);
   // This runs the foursquare API call and appends the data returned to the
   // map markers.
   self.fsApiCall(model.defLocations);
+  self.weatherReport();
+  console.log(weatherReport.current);
 
 }
 
@@ -365,7 +376,7 @@ var init = function() {
       '<div class="card-content white-text">' +
       '<p>Here are some Awesome places to check out in West Dover, Vermont.' +
       'You will be able to explore some great places to shop, grab a drink, ' +
-      'party, shop and stay all near the Mount Snow Ski Resort.</p>' +
+      'party and stay all near the Mount Snow Ski Resort.</p>' +
       '</br><span>Powered By, FourSquare <i class="fa fa-foursquare fa-fw pink-text text-lighten-1"></i>' +
       ' and Google Maps <i class="fa fa-foursquare fa-map-o pink-text text-lighten-1"></i></span>' +
       '</div>' +
