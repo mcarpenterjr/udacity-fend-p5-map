@@ -15,21 +15,32 @@
 
 <body>
   <div id="map"></div>
-  <ul id="slide-out" class="side-nav fixed amber darken-3">
-    <li  class="amber darken-1">
-      <form id="searchBox">
-        <div class="input-field hoverable">
-          <input id="search" placeholder="Search. . ." type="text" class="validate blue-text text-darken-1" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off"/>
-        </div>
-      </form>
+  <ul id="slide-out" class="side-nav fixed amber darken-2">
+    <li class="amber darken-2">
+      <div class="amber darken-1 card">
+        <span class="center-align blue-text text-darken-1"><h5>The Weather<i class="fa fa-sun-o fa-fw fa-lg orange-text"></i></h5></span>
+        <span data-bind="text: appVM.clouds" class="center-align blue-text text-darken-1"></span>
+
+      </div>
     </li>
-    <li class="no-padding" class="amber lighten-1">
-      <li class="amber blue-text text-darken-1 card"><h5 class="center-align">Awesome Places</h5></li>
-      <ul class="collection" data-bind="foreach: results">
-        <li class="no-padding collection-item amber darken-1">
-          <a href="#" data-bind="click: $parent.selectedMarker">
-            <span class="blue-text text-darken-1" data-bind="text: $data"></span>
-            <i class="fa fa-foursquare fa-fw pink-text text-lighten-1"></i></a>
+    <li class="no-padding amber">
+      <ul class="collapsible collapsible-accordion">
+        <li class="amber">
+          <a class="collapsible-header blue-text text-darken-1 center-align">West Dover Places<i class="fa fa-caret-down fa-fw"></i></a>
+          <div class="amber collapsible-body">
+            <form id="searchBox" class="amber darken-2">
+              <div class="input-field hoverable">
+                <input id="search" placeholder="Filter. . ." type="text" class="validate blue-text text-darken-1" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off"/>
+              </div>
+            </form>
+            <ul data-bind="foreach: results">
+              <li class="collection-item amber">
+                <a class="truncate" href="#" data-bind="click: $parent.selectedMarker">
+                  <span class="blue-text text-darken-1" data-bind="text: $data"></span>
+                  <i class="pink-text text-lighten-1 fa fa-foursquare fa-fw"></i></a>
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
     </li>

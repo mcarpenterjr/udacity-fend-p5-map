@@ -325,7 +325,7 @@ function appVM() {
   // Weather API Key
   var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f'
   // Empty Variable for weather Data
-  var weatherData = ko.observableArray([]);
+  var weatherData = ko.mapping.fromJS(self.weatherReport);
 
   self.weatherReport = function() {
     var url = "http://api.openweathermap.org/data/2.5/weather?" +
@@ -334,7 +334,7 @@ function appVM() {
 
     $.getJSON(url, function(data) {
       console.log(data);
-      current = ko.mapping.fromJSON(data);
+      self.weatherData = ko.mapping.fromJS(data, {}, self.weatherData);
     });
   };
   // This fires off the initMap function, setting the markers from the model.
@@ -343,7 +343,6 @@ function appVM() {
   // map markers.
   self.fsApiCall(model.defLocations);
   self.weatherReport();
-  console.log(weatherReport.current);
 
 }
 
@@ -354,7 +353,7 @@ var init = function() {
   $(document).ready(function() {
 
     $('.button-collapse').sideNav({
-      menuWidth: 320, // Default is 240
+      menuWidth: 280, // Default is 240
       edge: 'left', // Choose the horizontal origin
       closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
     });
@@ -387,7 +386,7 @@ var init = function() {
     confirmButtonText: "Let's Go!",
     confirmButtonColor: "#ffb300",
     html: true,
-    timer: 20000,
+    timer: 8500,
   });
 };
 
