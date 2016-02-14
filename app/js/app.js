@@ -323,18 +323,43 @@ function appVM() {
   // Our Wether Function
 
   // Weather API Key
-  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f'
-  // Empty Variable for weather Data
-  var weatherData = ko.mapping.fromJS(self.weatherReport);
-
-  self.weatherReport = function() {
+  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
+  self.weatherData = {
+    'current': {
+      'id': ko.observable(),
+      'main': ko.observable(),
+      'description': ko.observable(),
+      'icon': ko.observable()
+    },
+    'temp': ko.observable(),
+    'clouds': ko.observable(),
+    'wind': ko.observable(),
+    'good': ko.observable(false)
+  }
+  self.weatherReport = function(weatherData) {
     var url = "http://api.openweathermap.org/data/2.5/weather?" +
       "lat=" + model.defLoc[0] + "&lon=" + model.defLoc[1] +
       "&units=imperial&APPID=" + WEATHER_KEY;
 
-    $.getJSON(url, function(data) {
-      console.log(data);
-      self.weatherData = ko.mapping.fromJS(data, {}, self.weatherData);
+    $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'JSON',
+      success: function(result) {
+        var data = result;
+        appVM.weatherData.current.id(result.weather[0].id);
+        appVM.weatherData.current.main(result.weather[0].main);
+        appVM.weatherData.current.description(result.weather[0].description);
+        appVM.weatherData.current.icon(result.weather[0].icon);
+        appVM.weatherData.temp(result.main.temp);
+        appVM.weatherData.clouds(result.clouds.all);
+        appVM.weatherData.wind(result.wind.speed);
+        appVM.weatherData.good(true);
+        console.log('OpenWeather.org Data:', result);
+      },
+      error: function(result) {
+        Materialize.toast("Can't Get Weather. . .", 6000)
+      }
     });
   };
   // This fires off the initMap function, setting the markers from the model.
