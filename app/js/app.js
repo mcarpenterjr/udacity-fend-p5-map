@@ -98,13 +98,12 @@ function appVM() {
   // Foursquare ID and Secret Token for the api.
   var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
   var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
-    // Map Marker Variable.
+  // Map Marker Variable.
   var markerBouncing = null;
   // InfoWindow Variable
   var openInfoWindow = null;
   // Marker and InfoWindow Content Variable and Array.
   var infoWindowHTML = '';
-  self.infoWindowHTMLs = [];
 
   // Search term empty Variable.
   self.searchQuery = ko.observable("");
@@ -121,19 +120,19 @@ function appVM() {
    * @param business_id: string containing the Yelp business ID
    */
 
-  self.dispResults = function(defLocations) {
-    self.dispResultsList = [];
+  self.locList = function() {
+    self.locListItem = [];
     self.searchables = [];
     for (i = 0; i < model.defLocations.length; i++) {
       var item = model.defLocations[i].name;
-      self.dispResultsList.push(item);
+      self.locListItem.push(item);
       self.searchables.push(item.toLowerCase());
       console.log('Default Names Have Been Pushed');
     }
-    self.results = ko.observableArray(self.dispResultsList.slice(0));
+    self.results = ko.observableArray(self.locListItem.slice(0));
   };
   // Invokes initResults function on our locations.
-  self.dispResults(model.defLocations);
+  self.locList(model.defLocations);
 
   /**
    * @description Hard Coded locations
@@ -154,7 +153,7 @@ function appVM() {
     }
     self.searchables.forEach(function(item, index, array) {
       if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
-        self.results.push(self.dispResultsList[index]);
+        self.results.push(self.locListItem[index]);
 
         model.markers[index].setVisible(true);
       }
@@ -162,7 +161,7 @@ function appVM() {
 
     //If the filter input is empty, resets all locations to be visible
     if (self.searchQuery() === '') {
-      self.results(self.dispResultsList.slice(0));
+      self.results(self.locListItem.slice(0));
       model.markers.forEach(function(item, index, array) {
         if (!item.getVisible()) {
           item.setVisible(true);
@@ -274,9 +273,9 @@ function appVM() {
     for (var i = 0; i < data.length; i++) {
       var location = data[i];
       var gMapLatLong = new google.maps.LatLng(location.loc[0], location.loc[1]);
+      // SETS INFO WINDOW CONTENT
       var windowContent = location.name;
       //creates Marker, Adds to map
-      // we need to add this once we find PNG or SVG Icons (location.icon)
       var marker = addMarker(self.map, gMapLatLong, location.name, windowContent, location.icon);
       // Makrers to Data Model
       model.markers.push(marker);
@@ -294,8 +293,8 @@ function appVM() {
   // If we wanted to get trick, maybe we could put this in a
   // service worker one day.
 
-  self.fsApiCall = function(input) {
-    for (var i = 0; i < input.length; i++) {
+  self.fsApiCall = function() {
+    for (var i = 0; i < model.defLocations.length; i++) {
       var url = "https://api.foursquare.com/v2/venues/" +
         model.defLocations[i].venue_id +
         "?client_id=" + FSCLIENT_ID +
@@ -303,15 +302,13 @@ function appVM() {
         "&v=20151220";
 
       $.getJSON(url, function(data) {
-        clearTimeout(appVM.mesTimer);
+        clearTimeout(self.mesTimer);
         model.infoWindows.forEach(function(item, index, array) {
           if (item.content == data.response.venue.name) {
             infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
               "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
             item.setContent(infoWindowHTML);
-            console.log('Info Window Content Good');
-          } else {
-            console.log('Name MisMatch');
+            console.log('Info Window Content Good', data);
           }
         });
       });
@@ -320,7 +317,7 @@ function appVM() {
 
 
   //***************************************************************//
-  // Our Wether Function
+  // Wether Function
 
   // Weather API Key
   var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
@@ -340,7 +337,6 @@ function appVM() {
     var url = "http://api.openweathermap.org/data/2.5/weather?" +
       "lat=" + model.defLoc[0] + "&lon=" + model.defLoc[1] +
       "&units=imperial&APPID=" + WEATHER_KEY;
-
     $.ajax({
       url: url,
       type: 'GET',
@@ -354,19 +350,18 @@ function appVM() {
         appVM.weatherData.clouds(result.clouds.all);
         appVM.weatherData.wind(result.wind.speed);
         appVM.weatherData.good(true);
-
         $.extend(true, appVM.weatherData.current, {
           iconCode: result.weather[0].icon
         });
-
         console.log('OpenWeather.org Data:', result);
       },
       error: function(result) {
-        Materialize.toast("Can't Get Weather. . .", 6000)
+        Materialize.toast("Can't Get Weather. . .", 6000);
       }
     }).done(function() {
-      var weatherIcon = '<img src="http://openweathermap.org/img/w/' + self.weatherData.current.iconCode + '.png"></img>';
-      $('#weather').append(weatherIcon);      
+      var weatherIcon = 'http://openweathermap.org/img/w/' + self.weatherData.current.iconCode + '.png';
+      $('#weatherIcon').attr("src", weatherIcon);
+      Materialize.toast("Weather Updated", 6000);
     });
   };
   // This fires off the initMap function, setting the markers from the model.
