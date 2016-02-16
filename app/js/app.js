@@ -11,7 +11,7 @@ function model() {
    * @param business_id: string containing the Yelp business ID
    */
 
-  this.defLocations = [{
+  this.default = [{
     "name": "1900' Burger",
     "loc": [42.967257, -72.894326, 17],
     "icon": "img/glyphs/gm-beer.svg",
@@ -91,40 +91,56 @@ function model() {
 }
 var model = new model();
 
-//-------------------------------------------------------------------------
+  //***************************************************************//
 
 function appVM() {
   var self = this;
   // Foursquare ID and Secret Token for the api.
   var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
   var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
-  // Map Marker Variable.
+  // Map Marker Bouncing Variable, Null Stops premature Bouncing.
   var markerBouncing = null;
-  // InfoWindow Variable
+  // InfoWindow Variable, starts empty.
   var openInfoWindow = null;
-  // Marker and InfoWindow Content Variable and Array.
+  // InfoWindow Content Variable, Starts Empty.
   var infoWindowHTML = '';
-
-  // Search term empty Variable.
+  // Default Zoom Level
+  var defZoom = model.defLoc[2];
+  // Default View center, converted to Google Maps LatLng.
+  self.defLatLng = new google.maps.LatLng(model.defLoc[0], model.defLoc[1]);
+  // Weather API Key
+  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
+  // Weather Data Layout. . . ooOOH ObServables OOooh
+  self.weatherData = {
+    'current': {
+      'id': ko.observable(''),
+      'main': ko.observable(''),
+      'description': ko.observable(''),
+      'iconCode': '01d',
+    },
+    'temp': ko.observable(''),
+    'clouds': ko.observable(''),
+    'wind': ko.observable(''),
+    'good': ko.observable(false)
+  };
+  // Search, Empty Variables and Array.
   self.searchQuery = ko.observable("");
   self.searchResults = ko.observableArray([]);
 
+  //***************************************************************//
+
   /**
-   * @description Hard Coded locations
-   * @param name: string holding the locations name
-   * @param lat: the lattitude of the location
-   * @param lng: the longitude of the location
-   * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
-   *         ideally the icon would be no more than 50px X 65px
-   * @param venue_id: string containing the fourSquare venue ID
-   * @param business_id: string containing the Yelp business ID
+   * @description Location List, Loops through Object pushes
+   *  the name endpoint to an array, for display, pushes a lowercase version
+   * to another array, to become searchable.
+   * @param locs: Object-s, holding JS data,
    */
 
-  self.locList = function() {
+  self.locList = function(locs) {
     self.locListItem = [];
     self.searchables = [];
-    for (i = 0; i < model.defLocations.length; i++) {
-      var item = model.defLocations[i].name;
+    for (i = 0; i < locs.length; i++) {
+      var item = locs[i].name;
       self.locListItem.push(item);
       self.searchables.push(item.toLowerCase());
       console.log('Default Names Have Been Pushed');
@@ -132,18 +148,11 @@ function appVM() {
     self.results = ko.observableArray(self.locListItem.slice(0));
   };
   // Invokes initResults function on our locations.
-  self.locList(model.defLocations);
+  self.locList(model.default);
 
-  /**
-   * @description Hard Coded locations
-   * @param name: string holding the locations name
-   * @param lat: the lattitude of the location
-   * @param lng: the longitude of the location
-   * @param icon: string holding the icon path typically img/glyphs/*.svg or *.png
-   *         ideally the icon would be no more than 50px X 65px
-   * @param venue_id: string containing the fourSquare venue ID
-   * @param business_id: string containing the Yelp business ID
-   */
+  //***************************************************************//
+
+  // Search Function. . .
 
   self.searchF = function() {
     self.results.removeAll();
@@ -176,18 +185,18 @@ function appVM() {
     if (markerBouncing) markerBouncing.setAnimation(null);
     self.searchF();
     self.map.panTo(self.homelatlng);
-    self.map.setZoom(model.defLoc[2]);
+    self.map.setZoom(defZoom);
   };
 
   //***************************************************************//
 
-  // Begining of our google map functions.
+  // Begining of our google map functions. SPAGHETTI CODE. YAYAYAY!
   function dispMap(latlng) {
     var marker;
     var mapDisp = document.getElementById('map');
     var gLatLng = latlng;
     var mapOptions = {
-      zoom: model.defLoc[2],
+      zoom: defZoom,
       mapTypeId: google.maps.MapTypeId.HYBRID,
       center: gLatLng,
       disableDefaultUI: true
@@ -195,13 +204,8 @@ function appVM() {
     var map = new google.maps.Map(mapDisp, mapOptions);
     return map;
   }
-
-  // Default Location Based off the data in the Model(appM).
-  self.defLatLng = new google.maps.LatLng(model.defLoc[0], model.defLoc[1]);
-
   // Fires Up the Map.
   self.map = dispMap(self.defLatLng);
-
   // Places our Map markers
   function addMarker(map, latlng, title, content, icon) {
     var markerOptions = {
@@ -212,21 +216,17 @@ function appVM() {
       clickable: true,
       icon: icon,
     };
-
     var marker = new google.maps.Marker(markerOptions);
     marker.addListener('click', function() {
       map.setZoom(17);
       map.setCenter(marker.getPosition());
     });
-
     var infoWindowOptions = {
       content: content,
       position: latlng
     };
-
     var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
     model.infoWindows.push(infoWindow);
-
     google.maps.event.addListener(marker, 'click', function() {
       if (openInfoWindow) openInfoWindow.close();
       openInfoWindow = infoWindow;
@@ -234,12 +234,11 @@ function appVM() {
       toggleBounce();
     });
     google.maps.event.addListener(infoWindow, 'closeclick', function() {
-      map.setZoom(model.defLoc[2]);
+      map.setZoom(defZoom);
       map.setCenter(self.defLatLng);
       $('.button-collapse').sideNav('show');
       toggleBounce();
     });
-
     function toggleBounce() {
       if (markerBouncing) {
         markerBouncing.setAnimation(null);
@@ -253,7 +252,6 @@ function appVM() {
     }
     return marker;
   }
-
   self.selectedMarker = function(activeMarker) {
     for (var i = 0; i < model.markers.length; i++) {
       if (activeMarker == model.markers[i].title) {
@@ -261,12 +259,10 @@ function appVM() {
       }
     }
   }.bind(this);
-
   // InfoWindow Toggle-er
   function toggleInfoWindow(id) {
     google.maps.event.trigger(model.markers[id], 'click');
   }
-
   // Function to interate through hardcoded Default Locations
   // and get them on the map.
   self.initMap = function(data) {
@@ -282,21 +278,22 @@ function appVM() {
       console.log('Pushed New Markers');
     }
   };
+  self.initMap(model.default);
+
+    //***************************************************************//
 
   // Our Error Message timer... If fourSquare does not return any results
   // WE RIOT... J/K We only riot if they kill Daryl... We'll just throw an error.
   self.mesTimer = setTimeout(function() {
     Materialize.toast("Having trouble connecting, Try again...", 6000);
   }, 6000);
-
   // Api call to FourSquare, to start pulling Data.
   // If we wanted to get trick, maybe we could put this in a
   // service worker one day.
-
-  self.fsApiCall = function() {
-    for (var i = 0; i < model.defLocations.length; i++) {
+  self.fsApiCall = function(input) {
+    for (var i = 0; i < input.length; i++) {
       var url = "https://api.foursquare.com/v2/venues/" +
-        model.defLocations[i].venue_id +
+        input[i].venue_id +
         "?client_id=" + FSCLIENT_ID +
         "&client_secret=" + FSCLIENT_SECRET +
         "&v=20151220";
@@ -314,28 +311,14 @@ function appVM() {
       });
     }
   };
-
+  self.fsApiCall(model.default);
 
   //***************************************************************//
-  // Wether Function
 
-  // Weather API Key
-  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
-  self.weatherData = {
-    'current': {
-      'id': ko.observable(''),
-      'main': ko.observable(''),
-      'description': ko.observable(''),
-      'iconCode': '01d',
-    },
-    'temp': ko.observable(''),
-    'clouds': ko.observable(''),
-    'wind': ko.observable(''),
-    'good': ko.observable(false)
-  };
-  self.weatherReport = function(weatherData) {
+  // Wether Function
+  self.weatherReport = function(location) {
     var url = "http://api.openweathermap.org/data/2.5/weather?" +
-      "lat=" + model.defLoc[0] + "&lon=" + model.defLoc[1] +
+      "lat=" + location[0] + "&lon=" + location[1] +
       "&units=imperial&APPID=" + WEATHER_KEY;
     $.ajax({
       url: url,
@@ -364,37 +347,21 @@ function appVM() {
       Materialize.toast("Weather Updated", 6000);
     });
   };
-  // This fires off the initMap function, setting the markers from the model.
-  self.initMap(model.defLocations);
-  // This runs the foursquare API call and appends the data returned to the
-  // map markers.
-  self.fsApiCall(model.defLocations);
-  self.weatherReport();
+  self.weatherReport(model.defLoc);
 
-}
+};
 
-//------------------------------------------------------------------------
+  //***************************************************************//
 
-// Gets some visuals ready when the app first loads.
+  // Gets some visuals ready when the app first loads.
 var init = function() {
   $(document).ready(function() {
-
     $('.button-collapse').sideNav({
       menuWidth: 280, // Default is 240
       edge: 'left', // Choose the horizontal origin
       closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
     });
-
   });
-
-
-  $(document)
-    .ajaxStart(function() {
-      // Stuff for the start of the ajax call Goes Here
-    })
-    .ajaxStop(function() {
-      // Stuff for after the ajax call goes here
-    });
   swal({
     title: "Loading. . .",
     text: '<div class="progress"><div class="indeterminate"></div></div>' +
