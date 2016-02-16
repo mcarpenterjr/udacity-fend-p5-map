@@ -11,7 +11,7 @@ function model() {
    * @param business_id: string containing the Yelp business ID
    */
 
-  this.default = [{
+  self.default = [{
     "name": "1900' Burger",
     "loc": [42.967257, -72.894326, 17],
     "icon": "img/glyphs/gm-beer.svg",
@@ -206,6 +206,9 @@ function appVM() {
   }
   // Fires Up the Map.
   self.map = dispMap(self.defLatLng);
+
+
+
   // Places our Map markers
   function addMarker(map, latlng, title, content, icon) {
     var markerOptions = {
@@ -252,6 +255,8 @@ function appVM() {
     }
     return marker;
   }
+
+
   self.selectedMarker = function(activeMarker) {
     for (var i = 0; i < model.markers.length; i++) {
       if (activeMarker == model.markers[i].title) {
@@ -259,10 +264,14 @@ function appVM() {
       }
     }
   }.bind(this);
+
+
   // InfoWindow Toggle-er
   function toggleInfoWindow(id) {
     google.maps.event.trigger(model.markers[id], 'click');
   }
+
+
   // Function to interate through hardcoded Default Locations
   // and get them on the map.
   self.initMap = function(data) {
@@ -383,7 +392,6 @@ var init = function() {
     timer: 8500,
   });
 };
-
 var appVM = new appVM();
-init();
 ko.applyBindings(appVM);
+init();
