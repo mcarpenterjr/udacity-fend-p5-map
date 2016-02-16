@@ -1,5 +1,8 @@
 # udacity-fend-p5-map
 Udacity Front End Nano Degree Project 5.1 Neighborhood map, this is a SPA that runs on knockout.js, jQuery, and APIs from Google maps, Yelp and FourSquare. UI is powered by MaterializeCss and Font-Awesome.
+
+## TL;DR: run the `gulp` task
+
 ## Developer Install Instructions
 ### Git... Going...
 Use git to clone this repository into your chosen working directory.
@@ -38,23 +41,27 @@ Why gulp and not grunt? We don't have that many tasks that require automation, G
 The `gulp` default task. This launches a preview of the actual development build located in the `app/` directory. The stream is dependent on `browser-sync` and watches the `app/js/`, `app/css/`, `app/img/` and `app/` directories for any changes to `.js`, `.css` or `.html` files.
 [More on gulp-browser-sync here][BRSNC]
 
-_There is alot you can do with browser-sync_
+_Make sure browser-sync is installed before running the default task._
 
-#### The Build Task
-
+No other gulp streams have been developed at this time.
 
 
 ## Hard Coded Locations
 Main area is West Dover, VT
 
 ## Powered by...
-Hotel Sign by icon 54 from the Noun Project
-Beer by Edward Boatman from the Noun Project
-singer by riyazali from the Noun Project
-Campfire by parkjisun from the Noun Project
-Store by Edward Boatman from the Noun Project
-skis by Creative Stall from the Noun Project
+- [FourSquare][4S]
+- [Open Weather Map][OPW]
+- Hotel Sign by icon 54 from the Noun Project
+- Beer by Edward Boatman from the Noun Project
+- singer by riyazali from the Noun Project
+- Campfire by parkjisun from the Noun Project
+- Store by Edward Boatman from the Noun Project
+- skis by Creative Stall from the Noun Project
+
 
 [NPM]: (https://npmjs.org)
 [BOWER]: (https://bower.io)
 [BRSNC]: (https://www.browsersync.io/docs/gulp/)
+[4S]: (https://www.foursquare.com)
+[OPW]: (https://www.openweathermap.org)
