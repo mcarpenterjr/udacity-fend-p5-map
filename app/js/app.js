@@ -81,17 +81,15 @@ function model() {
 
   // Set the home location coordinates to initialize the map here
   self.defLoc = [42.9557093, -72.8923977, 14];
-
   // Create an empty array to store a list of map markers
   self.markers = [];
   self.infoWindows = [];
-
   // Empty Variable for GeoLocation
   self.currentLoc = [];
 }
 var model = new model();
 
-  //***************************************************************//
+//***************************************************************//
 
 function appVM() {
   var self = this;
@@ -105,24 +103,13 @@ function appVM() {
   // InfoWindow Content Variable, Starts Empty.
   var infoWindowHTML = '';
   // Default Zoom Level
-  var defZoom = model.defLoc[2];
+  self.defZoom = model.defLoc[2];
   // Default View center, converted to Google Maps LatLng.
-  self.defLatLng = new google.maps.LatLng(model.defLoc[0], model.defLoc[1]);
-  // Weather API Key
-  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
-  // Weather Data Layout. . . ooOOH ObServables OOooh
-  self.weatherData = {
-    'current': {
-      'id': ko.observable(''),
-      'main': ko.observable(''),
-      'description': ko.observable(''),
-      'iconCode': '01d',
-    },
-    'temp': ko.observable(''),
-    'clouds': ko.observable(''),
-    'wind': ko.observable(''),
-    'good': ko.observable(false)
+  self.defCenter = {
+    lat: model.defLoc[0],
+    lng: model.defLoc[1]
   };
+
   // Search, Empty Variables and Array.
   self.searchQuery = ko.observable("");
   self.searchResults = ko.observableArray([]);
@@ -151,7 +138,6 @@ function appVM() {
   self.locList(model.default);
 
   //***************************************************************//
-
   // Search Function. . .
 
   self.searchF = function() {
@@ -184,11 +170,12 @@ function appVM() {
     if (openInfoWindow) openInfoWindow.close();
     if (markerBouncing) markerBouncing.setAnimation(null);
     self.searchF();
-    self.map.panTo(self.homelatlng);
-    self.map.setZoom(defZoom);
+    self.map.panTo(self.defCenter);
+    self.map.setZoom(self.defZoom);
   };
 
   //***************************************************************//
+  // Map Function
 
   // Begining of our google map functions. SPAGHETTI CODE. YAYAYAY!
   function dispMap(latlng) {
@@ -196,7 +183,7 @@ function appVM() {
     var mapDisp = document.getElementById('map');
     var gLatLng = latlng;
     var mapOptions = {
-      zoom: defZoom,
+      zoom: self.defZoom,
       mapTypeId: google.maps.MapTypeId.HYBRID,
       center: gLatLng,
       disableDefaultUI: true
@@ -205,11 +192,8 @@ function appVM() {
     return map;
   }
   // Fires Up the Map.
-  self.map = dispMap(self.defLatLng);
+  self.map = dispMap(self.defCenter);
 
-
-
-  // Places our Map markers
   function addMarker(map, latlng, title, content, icon) {
     var markerOptions = {
       position: latlng,
@@ -237,11 +221,12 @@ function appVM() {
       toggleBounce();
     });
     google.maps.event.addListener(infoWindow, 'closeclick', function() {
-      map.setZoom(defZoom);
-      map.setCenter(self.defLatLng);
+      map.setZoom(self.defZoom);
+      map.setCenter(self.defCenter);
       $('.button-collapse').sideNav('show');
       toggleBounce();
     });
+
     function toggleBounce() {
       if (markerBouncing) {
         markerBouncing.setAnimation(null);
@@ -256,7 +241,6 @@ function appVM() {
     return marker;
   }
 
-
   self.selectedMarker = function(activeMarker) {
     for (var i = 0; i < model.markers.length; i++) {
       if (activeMarker == model.markers[i].title) {
@@ -265,12 +249,10 @@ function appVM() {
     }
   }.bind(this);
 
-
   // InfoWindow Toggle-er
   function toggleInfoWindow(id) {
     google.maps.event.trigger(model.markers[id], 'click');
   }
-
 
   // Function to interate through hardcoded Default Locations
   // and get them on the map.
@@ -289,7 +271,8 @@ function appVM() {
   };
   self.initMap(model.default);
 
-    //***************************************************************//
+  //***************************************************************//
+  // API CALL
 
   // Our Error Message timer... If fourSquare does not return any results
   // WE RIOT... J/K We only riot if they kill Daryl... We'll just throw an error.
@@ -323,8 +306,24 @@ function appVM() {
   self.fsApiCall(model.default);
 
   //***************************************************************//
+  // Weather Function
 
-  // Wether Function
+  // Weather API Key
+  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
+  // Weather Data Layout. . . ooOOH ObServables OOooh
+  self.weatherData = {
+    'current': {
+      'id': ko.observable(''),
+      'main': ko.observable(''),
+      'description': ko.observable(''),
+      'iconCode': '01d',
+    },
+    'temp': ko.observable(''),
+    'clouds': ko.observable(''),
+    'wind': ko.observable(''),
+    'good': ko.observable(false)
+  };
+  // Function To Retreive The Weather
   self.weatherReport = function(location) {
     var url = "http://api.openweathermap.org/data/2.5/weather?" +
       "lat=" + location[0] + "&lon=" + location[1] +
@@ -357,13 +356,12 @@ function appVM() {
     });
   };
   self.weatherReport(model.defLoc);
+}
 
-};
+//***************************************************************//
 
-  //***************************************************************//
-
-  // Gets some visuals ready when the app first loads.
-var init = function() {
+// Gets some visuals ready when the app first loads.
+var initDisp = function() {
   $(document).ready(function() {
     $('.button-collapse').sideNav({
       menuWidth: 280, // Default is 240
@@ -392,6 +390,10 @@ var init = function() {
     timer: 8500,
   });
 };
+function initApp() {
+
+}
 var appVM = new appVM();
 ko.applyBindings(appVM);
-init();
+
+initDisp();
