@@ -90,7 +90,7 @@ var model = new model();
 // Initialize Map Function
 //***************************************************//
 
-var initMap = function() {
+var appInit = function() {
   var self = this;
   // Default Zoom Level
   self.defZoom = model.defLoc[2];
@@ -111,6 +111,7 @@ var initMap = function() {
       disableDefaultUI: true
     };
     var map = new google.maps.Map(mapDisp, mapOptions);
+    return map;
   }
   // Fires Up the Map.
   self.map = dispMap(self.defCenter);
@@ -145,109 +146,109 @@ var initMap = function() {
   });
 };
 
-  //***************************************************************//
-  // PLACES CONSTRUCTOR
-  //***************************************************//
+//***************************************************************//
+// PLACES CONSTRUCTOR
+//***************************************************//
 
-  /**
-   * @description Creates the places object-s. creates defaults for
-   *  each incoming place. Transfers existing information into
-   *  newly created place.
-   * @param places: Empty array for storing places.
-   * @param place: Object function, scaffolds out defaults for a new
-   *  place.
-   * @param newPlaces: Function, loops over incoming data from the model,
-   *  or can be used to loop over incoming data from an api call to make
-   *  the app Dynamic. Loops over data, pushes a new place to the array.
-   */
+/**
+ * @description Creates the places object-s. creates defaults for
+ *  each incoming place. Transfers existing information into
+ *  newly created place.
+ * @param places: Empty array for storing places.
+ * @param place: Object function, scaffolds out defaults for a new
+ *  place.
+ * @param newPlaces: Function, loops over incoming data from the model,
+ *  or can be used to loop over incoming data from an api call to make
+ *  the app Dynamic. Loops over data, pushes a new place to the array.
+ */
 
-  var places = [];
-  var place = function(input) {
-    this.name = input.name;
-    this.lat = input.loc[0];
-    this.lng = input.loc[1];
-    this.zoom = input.loc[2];
-    this.coords = {
-      lat: this.lat,
-      lng: this.lng
-    };
-    this.icon = input.icon;
-    this.VENUE_ID = input.venue_id;
-    this.url = ko.observable('');
-    this.address = ko.observable('');
-    this.venueRating = ko.observable('');
-    this.categories = ko.observable('');
-    this.hereNow = ko.observable('');
-    this.photosPrefix = ko.observable('');
-    this.photosSuffix = ko.observable('');
+var places = [];
+var place = function(input) {
+  this.name = input.name;
+  this.lat = input.loc[0];
+  this.lng = input.loc[1];
+  this.zoom = input.loc[2];
+  this.coords = {
+    lat: this.lat,
+    lng: this.lng
   };
-  var newPlaces = function(input) {
-    for (var i = 0; i < input.length; i++) {
-      places.push(new place(input[i]));
-    }
-  };
-  newPlaces(model.default);
+  this.icon = input.icon;
+  this.VENUE_ID = input.venue_id;
+  this.url = ko.observable('');
+  this.address = ko.observable('');
+  this.venueRating = ko.observable('');
+  this.categories = ko.observable('');
+  this.hereNow = ko.observable('');
+  this.photosPrefix = ko.observable('');
+  this.photosSuffix = ko.observable('');
+};
+var newPlaces = function(input) {
+  for (var i = 0; i < input.length; i++) {
+    places.push(new place(input[i]));
+  }
+};
+newPlaces(model.default);
 
-  //***************************************************************//
-  // PLACES PROTOTYPES
-  //***************************************************//
+//***************************************************************//
+// PLACES PROTOTYPES
+//***************************************************//
 
-  /**
-   * @description Console logging function for testing, add
-   *  or remove logs as neccesary.
-   */
+/**
+ * @description Console logging function for testing, add
+ *  or remove logs as neccesary.
+ */
 
-  place.prototype.log = function() {
-    console.log(this.name);
-    console.log(this.lat);
-    console.log(this.lng);
-    console.log(this.zoom);
-    console.log(this.coords);
-    console.log(this.icon);
-    console.log(this.VENUE_ID);
-    console.log(this.url);
-  };
-  //places[0].log();
+place.prototype.log = function() {
+  console.log(this.name);
+  console.log(this.lat);
+  console.log(this.lng);
+  console.log(this.zoom);
+  console.log(this.coords);
+  console.log(this.icon);
+  console.log(this.VENUE_ID);
+  console.log(this.url);
+};
+//places[0].log();
 
-  place.prototype.addMarker = function() {
-    var newMarker =
-      this.marker = new google.maps.Marker({
-        position: this.coords,
-        map: map,
-        title: this.name,
-        animation: google.maps.Animation.DROP,
-        clickable: true,
-        icon: this.icon,
-      });
-    places.push(newMarker);
-    places.pop();
-  };
-  // places[0].addMarker();
-  // console.log("This is the first index of the places array: ",places[0]);
-  // console.log("This is the places Array: ",places);
+place.prototype.addMarker = function() {
+  var newMarker =
+    this.marker = new google.maps.Marker({
+      position: this.coords,
+      map: map,
+      title: this.name,
+      animation: google.maps.Animation.DROP,
+      clickable: true,
+      icon: this.icon,
+    });
+  places.push(newMarker);
+  places.pop();
+};
+// places[0].addMarker();
+// console.log("This is the first index of the places array: ",places[0]);
+// console.log("This is the places Array: ",places);
 
-  place.prototype.addInfoWindow = function() {
-    var newInfoWindow =
-      this.infoWindow = new google.maps.InfoWindow({
-        content: "infowindowcontent",
-        position: this.coords,
-      });
-    places.push(newInfoWindow);
-    places.pop();
-  };
-  // places[0].addInfoWindow();
-  // console.log("This is the first index of the places array: ",places[0]);
-  // console.log("This is the places Array: ",places);
+place.prototype.addInfoWindow = function() {
+  var newInfoWindow =
+    this.infoWindow = new google.maps.InfoWindow({
+      content: "infowindowcontent",
+      position: this.coords,
+    });
+  places.push(newInfoWindow);
+  places.pop();
+};
+// places[0].addInfoWindow();
+// console.log("This is the first index of the places array: ",places[0]);
+// console.log("This is the places Array: ",places);
 var addToMap = function(input) {
-    for (var i = 0; i < input.length; i++) {
-      input[i].addMarker();
-      input[i].addInfoWindow();
-    }
-  };
+  for (var i = 0; i < input.length; i++) {
+    input[i].addMarker();
+    input[i].addInfoWindow();
+  }
+};
 
-  //***************************************************************//
-  // LOCAL WEATHER
-  //***************************************************//
+//***************************************************************//
+// LOCAL WEATHER
+//***************************************************//
 
 // Weather API Key
 var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
