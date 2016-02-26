@@ -16,32 +16,33 @@
 <body>
   <div id="map"></div>
   <ul id="slide-out" class="side-nav fixed amber darken-2">
+    <li class="amber darken-2">
+      <div class="card amber darken-1 blue-text text-darken-1">
+        <div class="card-content">
+          <span class="card-title">West Dover, VT<i class="fa fa-map-marker fa-fw blue-text"></i></span>
+        </div>
+      </div>
+    </li>
     <li class="amber darken-2" data-bind="visible: appVM.weatherData.good">
       <div class="card amber darken-1 blue-text text-darken-1">
         <div class="card-content">
-          <span class="card-title">Weather<i class="fa fa-sun-o fa-fw orange-text"></i></span>
+          <span class="card-title">Weather</span>
           <ul class="collection">
-            <li id="weather" class="collection-item">Currently:</br><span data-bind="text: appVM.weatherData.current.description" class="center-align blue-text text-darken-1"></span>
-            <!-- <img id="weatherIcon" src="" alt="Weather Icon"></img> -->
+            <li id="weather" class="collection-item center-align amber">
+              Currently:</br><img id="weatherIcon" src="" alt="Weather Icon"></img>
+              </br><span data-bind="text: appVM.weatherData.current.description" class="center-align blue-text text-darken-1"></span>
+              </br><span data-bind="text: appVM.weatherData.temp" class="center-align blue-text text-darken-1"></span>&#8457;
+              </br>Clouds:&nbsp<span data-bind="text: appVM.weatherData.clouds" class="center-align blue-text text-darken-1"></span>%
+              </br>Wind:&nbsp<span data-bind="text: appVM.weatherData.wind" class="center-align blue-text text-darken-1"></span>mph.
             </li>
-            <li class="collection-item"><span data-bind="text: appVM.weatherData.temp" class="center-align blue-text text-darken-1"></span>&#8457;</li>
-            <li class="collection-item">Clouds:</br><span data-bind="text: appVM.weatherData.clouds" class="center-align blue-text text-darken-1"></span>%</li>
-            <li class="collection-item">Wind:</br><span data-bind="text: appVM.weatherData.wind" class="center-align blue-text text-darken-1"></span>mph.</li>
           </ul>
         </div>
       </div>
-
-
-      <span data-bind="text: appVM.weatherData.current.id" class="center-align blue-text text-darken-1"></span>
-      <span data-bind="text: appVM.weatherData.current.main" class="center-align blue-text text-darken-1"></span>
-      <span data-bind="text: appVM.weatherData.current.icon" class="center-align blue-text text-darken-1"></span>
-
-
     </li>
     <li class="no-padding amber">
       <ul class="collapsible collapsible-accordion">
         <li class="amber">
-          <a class="collapsible-header blue-text text-darken-1 center-align">West Dover Places<i class="fa fa-caret-down fa-fw"></i></a>
+          <a class="collapsible-header blue-text text-darken-1 center-align">Places<i class="fa fa-caret-down fa-fw"></i></a>
           <div class="amber collapsible-body">
             <form id="searchBox" class="amber darken-2">
               <div class="input-field hoverable">
@@ -64,13 +65,12 @@
 
   <!-- Script Stuff -->
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM">
-  </script>
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/materialize.js"></script>
   <script type="text/javascript" src="js/knockout.js"></script>
   <script type="text/javascript" src="js/knockout.mapping.js"></script>
   <script type="text/javascript" src="js/sweetalert.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM"></script>
   <!-- <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
   <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script> -->
   <script type="text/javascript" src="js/app.js"></script>

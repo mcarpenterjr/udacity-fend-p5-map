@@ -1,6 +1,11 @@
 # Resource Subdirectories
 /bower_components
 /node_modules
+# Dev Directories
+/appv2
+/dist
+# Dev Files
+/app/js/junk.js
 
 # Windows image file caches
 Thumbs.db
