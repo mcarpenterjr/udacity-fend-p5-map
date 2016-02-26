@@ -44,12 +44,12 @@
         <li class="amber">
           <a class="collapsible-header blue-text text-darken-1 center-align">Places<i class="fa fa-caret-down fa-fw"></i></a>
           <div class="amber collapsible-body">
-            <form id="searchBox" class="amber darken-2">
+            <!-- <form id="searchBox" class="amber darken-2">
               <div class="input-field hoverable">
                 <input id="search" placeholder="Filter. . ." type="text" class="validate blue-text text-darken-1" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off" />
               </div>
-            </form>
-            <ul data-bind="foreach: results">
+            </form> -->
+            <ul data-bind="foreach: newPlaces.results">
               <li class="collection-item amber">
                 <a class="truncate" href="#" data-bind="click: $parent.selectedMarker">
                   <span class="blue-text text-darken-1" data-bind="text: $data"></span>

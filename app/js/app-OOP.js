@@ -115,6 +115,7 @@ var appInit = function() {
   }
   // Fires Up the Map.
   self.map = dispMap(self.defCenter);
+  newPlaces(model.default);
   addToMap(places);
 
   $(document).ready(function() {
@@ -187,7 +188,6 @@ var newPlaces = function(input) {
     places.push(new place(input[i]));
   }
 };
-newPlaces(model.default);
 
 //***************************************************************//
 // PLACES PROTOTYPES
@@ -210,16 +210,46 @@ place.prototype.log = function() {
 };
 //places[0].log();
 
-place.prototype.addMarker = function() {
-  var newMarker =
-    this.marker = new google.maps.Marker({
-      position: this.coords,
-      map: map,
-      title: this.name,
-      animation: google.maps.Animation.DROP,
-      clickable: true,
-      icon: this.icon,
-    });
+place.prototype.marker = function() {
+  var markerOptions = {
+    position: this.coords,
+    map: map,
+    title: this.name,
+    animation: google.maps.Animation.DROP,
+    clickable: true,
+    icon: this.icon,
+  };
+  var infoWindowOpen = false;
+  var infoWindowOptions = {
+    content: this.name,
+    position: this.coords,
+    disableAutoPan: false,
+  };
+  var newMarker = new google.maps.Marker(markerOptions);
+  var newInfoWindow = new google.maps.InfoWindow(infoWindowOptions);
+  newMarker.addListener('click', function() {
+    map.setZoom(17);
+    map.setCenter(newMarker.getPosition());
+    if (newMarker.getAnimation() !== null) {
+      newMarker.setAnimation(null);
+    } else {
+      newMarker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+    if (infoWindowOpen === true) {
+      newInfoWindow.close(map, newMarker);
+      infoWindowOpen = false;
+    } else {
+      newInfoWindow.open(map, newMarker);
+      infoWindowOpen = true;
+    }
+      // newInfoWindow.open(map, newMarker);
+  });
+  newInfoWindow.addListener('closeclick', function() {
+    infoWindowOpen = false;
+    map.setZoom(self.defZoom);
+    map.setCenter(self.defCenter);
+    newMarker.setAnimation(null);
+  });
   places.push(newMarker);
   places.pop();
 };
@@ -227,24 +257,16 @@ place.prototype.addMarker = function() {
 // console.log("This is the first index of the places array: ",places[0]);
 // console.log("This is the places Array: ",places);
 
-place.prototype.addInfoWindow = function() {
-  var newInfoWindow =
-    this.infoWindow = new google.maps.InfoWindow({
-      content: "infowindowcontent",
-      position: this.coords,
-    });
-  places.push(newInfoWindow);
-  places.pop();
-};
-// places[0].addInfoWindow();
-// console.log("This is the first index of the places array: ",places[0]);
-// console.log("This is the places Array: ",places);
 var addToMap = function(input) {
   for (var i = 0; i < input.length; i++) {
-    input[i].addMarker();
-    input[i].addInfoWindow();
+    input[i].marker();
   }
 };
+
+
+//***************************************************************//
+// CLICK EVENTS
+//***************************************************//
 
 //***************************************************************//
 // LOCAL WEATHER
@@ -296,6 +318,6 @@ weatherReport = function(location) {
     $('#weatherIcon').attr("src", weatherIcon);
     Materialize.toast("Weather Updated", 6000);
   });
+  ko.applyBindings(weatherData);
 };
 weatherReport(model.defLoc);
-ko.applyBindings(weatherData);
