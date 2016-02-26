@@ -11,7 +11,7 @@ function model() {
    * @param business_id: string containing the Yelp business ID
    */
 
-  this.defLocations = [{
+  self.defLocations = [{
     "name": "1900' Burger",
     "loc": [42.967257, -72.894326, 17],
     "icon": "img/glyphs/gm-beer.svg",
@@ -366,7 +366,7 @@ function appVM() {
       }
     }).done(function() {
       var weatherIcon = '<img src="http://openweathermap.org/img/w/' + self.weatherData.current.iconCode + '.png"></img>';
-      $('#weather').append(weatherIcon);      
+      $('#weather').append(weatherIcon);
     });
   };
   // This fires off the initMap function, setting the markers from the model.
