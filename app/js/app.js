@@ -110,9 +110,9 @@ function appVM() {
     lng: model.defLoc[1]
   };
 
-  // Search, Empty Variables and Array.
+  // Search, Empty Variable.
   self.searchQuery = ko.observable("");
-  self.searchResults = ko.observableArray([]);
+
 
   //***************************************************************//
 

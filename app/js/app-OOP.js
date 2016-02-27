@@ -164,6 +164,7 @@ var appInit = function() {
  */
 
 var places = [];
+
 var place = function(input) {
   this.name = input.name;
   this.lat = input.loc[0];
@@ -211,6 +212,8 @@ place.prototype.log = function() {
 //places[0].log();
 
 place.prototype.marker = function() {
+  var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
+  var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
   var markerOptions = {
     position: this.coords,
     map: map,
@@ -227,11 +230,37 @@ place.prototype.marker = function() {
   };
   var newMarker = new google.maps.Marker(markerOptions);
   var newInfoWindow = new google.maps.InfoWindow(infoWindowOptions);
+
+  var url = "https://api.foursquare.com/v2/venues/" +
+    this.VENUE_ID +
+    "?client_id=" + FSCLIENT_ID +
+    "&client_secret=" + FSCLIENT_SECRET +
+    "&v=20151220";
+
+  $.ajax({
+    url: url,
+    type: 'GET',
+    dataType: 'JSON',
+    success: function(data) {
+      infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
+        "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
+      newInfoWindow.setContent(infoWindowHTML);
+      console.log('Info Window Content from NEWMARKER', data);
+    },
+    error: function(result) {
+      Materialize.toast("Can't Reach FourSquare. . .", 6000);
+    }
+  }).done(function() {
+
+  });
+
   newMarker.addListener('click', function() {
     map.setZoom(17);
     map.setCenter(newMarker.getPosition());
     if (newMarker.getAnimation() !== null) {
       newMarker.setAnimation(null);
+      map.setZoom(self.defZoom);
+      map.setCenter(self.defCenter);
     } else {
       newMarker.setAnimation(google.maps.Animation.BOUNCE);
     }
@@ -242,7 +271,7 @@ place.prototype.marker = function() {
       newInfoWindow.open(map, newMarker);
       infoWindowOpen = true;
     }
-      // newInfoWindow.open(map, newMarker);
+    // newInfoWindow.open(map, newMarker);
   });
   newInfoWindow.addListener('closeclick', function() {
     infoWindowOpen = false;
@@ -265,7 +294,45 @@ var addToMap = function(input) {
 
 
 //***************************************************************//
-// CLICK EVENTS
+// SEARCH FUNCTION
+//***************************************************//
+
+searchF = function() {
+  results.removeAll();
+
+  for (var i = 0; i < places.length; i++) {
+    places.prototype.marker[i].setVisible(false);
+  }
+  searchables.forEach(function(item, index, array) {
+    if (item.indexOf(searchQuery().toLowerCase()) > -1) {
+      results.push(places[index]);
+
+      places.prototype.marker[index].setVisible(true);
+    }
+  });
+
+  //If the filter input is empty, resets all locations to be visible
+  if (searchQuery() === '') {
+    results(places.name.slice(0));
+    places.prototype.marker.forEach(function(item, index, array) {
+      if (!item.getVisible()) {
+        item.setVisible(true);
+      }
+    });
+  }
+}.bind(this);
+
+clearSearch = function() {
+  searchQuery('');
+  if (openInfoWindow) openInfoWindow.close();
+  if (markerBouncing) markerBouncing.setAnimation(null);
+  searchF();
+  map.panTo(self.defCenter);
+  map.setZoom(self.defZoom);
+};
+
+//***************************************************************//
+// FOURSQUARE API
 //***************************************************//
 
 //***************************************************************//
@@ -316,7 +383,7 @@ weatherReport = function(location) {
   }).done(function() {
     var weatherIcon = 'http://openweathermap.org/img/w/' + self.weatherData.current.iconCode + '.png';
     $('#weatherIcon').attr("src", weatherIcon);
-    Materialize.toast("Weather Updated", 6000);
+    Materialize.toast('Weather Updated <img  src="' + weatherIcon + '" alt="Weather Icon"></img>', 6000);
   });
   ko.applyBindings(weatherData);
 };
