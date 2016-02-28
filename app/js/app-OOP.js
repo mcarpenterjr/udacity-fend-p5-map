@@ -115,8 +115,7 @@ var appInit = function() {
   }
   // Fires Up the Map.
   self.map = dispMap(self.defCenter);
-  app.newPlaces(model.default);
-  addToMap(places);
+  app.addToMap(app.places);
 
   $(document).ready(function() {
     $('.button-collapse').sideNav({
@@ -151,13 +150,19 @@ var appInit = function() {
 // APPLICATION CONSTRUCTOR
 //***************************************************//
 
-var app = function(){
-
-var self = this;
-
+function app() {
+  var self = this;
   //***************************************************************//
   // PLACES CONSTRUCTOR
   //***************************************************//
+
+  // Default Zoom Level
+  self.defZoom = model.defLoc[2];
+  // Default View center, converted to Google Maps LatLng.
+  self.defCenter = {
+    lat: model.defLoc[0],
+    lng: model.defLoc[1]
+  };
 
   /**
    * @description Creates the places object-s. creates defaults for
@@ -171,8 +176,8 @@ var self = this;
    *  the app Dynamic. Loops over data, pushes a new place to the array.
    */
 
-  var places = [];
-  var place = function(input) {
+  self.places = [];
+  self.place = function(input) {
     this.name = input.name;
     this.lat = input.loc[0];
     this.lng = input.loc[1];
@@ -191,211 +196,229 @@ var self = this;
     this.photosPrefix = ko.observable('');
     this.photosSuffix = ko.observable('');
   };
-  var newPlaces = function(input) {
+  self.newPlaces = function(input) {
     for (var i = 0; i < input.length; i++) {
-      places.push(new place(input[i]));
+      self.places.push(new self.place(input[i]));
     }
   };
+  self.newPlaces(model.default);
 
+  //***************************************************************//
+  // PLACES PROTOTYPES
+  //***************************************************//
+  /**
+   * @description Console logging function for testing, add
+   *  or remove logs as neccesary.
+   */
 
-};
-
-
-//***************************************************************//
-// PLACES PROTOTYPES
-//***************************************************//
-
-/**
- * @description Console logging function for testing, add
- *  or remove logs as neccesary.
- */
-
-place.prototype.log = function() {
-  console.log(this.name);
-  console.log(this.lat);
-  console.log(this.lng);
-  console.log(this.zoom);
-  console.log(this.coords);
-  console.log(this.icon);
-  console.log(this.VENUE_ID);
-  console.log(this.url);
-};
-//places[0].log();
-
-place.prototype.marker = function() {
-  var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
-  var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
-  var markerOptions = {
-    position: this.coords,
-    map: map,
-    title: this.name,
-    animation: google.maps.Animation.DROP,
-    clickable: true,
-    icon: this.icon,
+  self.place.prototype.log = function() {
+    console.log(this.name);
+    console.log(this.lat);
+    console.log(this.lng);
+    console.log(this.zoom);
+    console.log(this.coords);
+    console.log(this.icon);
+    console.log(this.VENUE_ID);
+    console.log(this.url);
   };
-  var infoWindowOpen = false;
-  var infoWindowOptions = {
-    content: this.name,
-    position: this.coords,
-    disableAutoPan: false,
-  };
-  var newMarker = new google.maps.Marker(markerOptions);
-  var newInfoWindow = new google.maps.InfoWindow(infoWindowOptions);
+  //places[0].log();
 
-  var url = "https://api.foursquare.com/v2/venues/" +
-    this.VENUE_ID +
-    "?client_id=" + FSCLIENT_ID +
-    "&client_secret=" + FSCLIENT_SECRET +
-    "&v=20151220";
+  self.place.prototype.marker = function() {
+    var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
+    var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
+    var markerOptions = {
+      position: this.coords,
+      map: map,
+      title: this.name,
+      animation: google.maps.Animation.DROP,
+      clickable: true,
+      icon: this.icon,
+    };
+    var infoWindowOpen = false;
+    var infoWindowOptions = {
+      content: this.name,
+      position: this.coords,
+      disableAutoPan: false,
+    };
+    var newMarker = new google.maps.Marker(markerOptions);
+    var newInfoWindow = new google.maps.InfoWindow(infoWindowOptions);
 
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'JSON',
-    success: function(data) {
-      infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
-        "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
-      newInfoWindow.setContent(infoWindowHTML);
-      console.log('Info Window Content from NEWMARKER', data);
-    },
-    error: function(result) {
-      Materialize.toast("Can't Reach FourSquare. . .", 6000);
-    }
-  }).done(function() {
+    var url = "https://api.foursquare.com/v2/venues/" +
+      this.VENUE_ID +
+      "?client_id=" + FSCLIENT_ID +
+      "&client_secret=" + FSCLIENT_SECRET +
+      "&v=20151220";
 
-  });
+    $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'JSON',
+      success: function(data) {
+        infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
+          "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
+        newInfoWindow.setContent(infoWindowHTML);
+        console.log('Info Window Content from NEWMARKER', data);
+      },
+      error: function(result) {
+        Materialize.toast("Can't Reach FourSquare. . .", 6000);
+      }
+    }).done(function() {
 
-  newMarker.addListener('click', function() {
-    map.setZoom(17);
-    map.setCenter(newMarker.getPosition());
-    if (newMarker.getAnimation() !== null) {
-      newMarker.setAnimation(null);
+    });
+
+    newMarker.addListener('click', function() {
+      map.setZoom(17);
+      map.setCenter(newMarker.getPosition());
+      if (newMarker.getAnimation() !== null) {
+        newMarker.setAnimation(null);
+        map.setZoom(self.defZoom);
+        map.setCenter(self.defCenter);
+      } else {
+        newMarker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+      if (infoWindowOpen === true) {
+        newInfoWindow.close(map, newMarker);
+        infoWindowOpen = false;
+      } else {
+        newInfoWindow.open(map, newMarker);
+        infoWindowOpen = true;
+      }
+      // newInfoWindow.open(map, newMarker);
+    });
+    newInfoWindow.addListener('closeclick', function() {
+      infoWindowOpen = false;
       map.setZoom(self.defZoom);
       map.setCenter(self.defCenter);
-    } else {
-      newMarker.setAnimation(google.maps.Animation.BOUNCE);
+      newMarker.setAnimation(null);
+    });
+    self.places.push(newMarker);
+    self.places.pop();
+  };
+  // places[0].addMarker();
+  // console.log("This is the first index of the places array: ",places[0]);
+  // console.log("This is the places Array: ",places);
+
+  self.addToMap = function(input) {
+    for (var i = 0; i < input.length; i++) {
+      input[i].marker();
     }
-    if (infoWindowOpen === true) {
-      newInfoWindow.close(map, newMarker);
-      infoWindowOpen = false;
-    } else {
-      newInfoWindow.open(map, newMarker);
-      infoWindowOpen = true;
+  };
+
+  //***************************************************************//
+  // SEARCH FUNCTION
+  //***************************************************//
+
+  self.locList = function(locs) {
+    self.locListItem = [];
+    self.searchables = [];
+    for (i = 0; i < locs.length; i++) {
+      var item = locs[i].name;
+      self.locListItem.push(item);
+      self.searchables.push(item.toLowerCase());
+      console.log('Added: ', item, 'to the list');
     }
-    // newInfoWindow.open(map, newMarker);
-  });
-  newInfoWindow.addListener('closeclick', function() {
-    infoWindowOpen = false;
-    map.setZoom(self.defZoom);
-    map.setCenter(self.defCenter);
-    newMarker.setAnimation(null);
-  });
-  places.push(newMarker);
-  places.pop();
-};
-// places[0].addMarker();
-// console.log("This is the first index of the places array: ",places[0]);
-// console.log("This is the places Array: ",places);
+    self.results = ko.observableArray(self.locListItem.slice(0));
+  };
+  // Invokes initResults function on our locations.
+  self.locList(self.places);
 
-var addToMap = function(input) {
-  for (var i = 0; i < input.length; i++) {
-    input[i].marker();
-  }
-};
+  self.searchF = function() {
+    self.results.removeAll();
 
-
-//***************************************************************//
-// SEARCH FUNCTION
-//***************************************************//
-
-searchF = function() {
-  results.removeAll();
-
-  for (var i = 0; i < places.length; i++) {
-    places.prototype.marker[i].setVisible(false);
-  }
-  searchables.forEach(function(item, index, array) {
-    if (item.indexOf(searchQuery().toLowerCase()) > -1) {
-      results.push(places[index]);
-
-      places.prototype.marker[index].setVisible(true);
+    for (var i = 0; i < model.markers.length; i++) {
+      model.markers[i].setVisible(false);
     }
-  });
+    self.searchables.forEach(function(item, index, array) {
+      if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
+        self.results.push(self.locListItem[index]);
 
-  //If the filter input is empty, resets all locations to be visible
-  if (searchQuery() === '') {
-    results(places.name.slice(0));
-    places.prototype.marker.forEach(function(item, index, array) {
-      if (!item.getVisible()) {
-        item.setVisible(true);
+        model.markers[index].setVisible(true);
       }
     });
-  }
-}.bind(this);
 
-clearSearch = function() {
-  searchQuery('');
-  if (openInfoWindow) openInfoWindow.close();
-  if (markerBouncing) markerBouncing.setAnimation(null);
-  searchF();
-  map.panTo(self.defCenter);
-  map.setZoom(self.defZoom);
-};
+    //If the filter input is empty, resets all locations to be visible
+    if (self.searchQuery() === '') {
+      self.results(self.locListItem.slice(0));
+      model.markers.forEach(function(item, index, array) {
+        if (!item.getVisible()) {
+          item.setVisible(true);
+        }
+      });
+    }
+  }.bind(this);
+
+  self.clearSearch = function() {
+    self.searchQuery('');
+    if (openInfoWindow) openInfoWindow.close();
+    if (markerBouncing) markerBouncing.setAnimation(null);
+    self.searchF();
+    self.map.panTo(self.defCenter);
+    self.map.setZoom(self.defZoom);
+  };
+
+  //***************************************************************//
+  // LOCAL WEATHER
+  //***************************************************//
+
+  // Weather API Key
+  var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
+  // Weather Data Layout. . . ooOOH ObServables OOooh
+  weatherData = {
+    'current': {
+      'id': ko.observable(''),
+      'main': ko.observable(''),
+      'description': ko.observable(''),
+      'iconCode': '01d',
+    },
+    'temp': ko.observable(''),
+    'clouds': ko.observable(''),
+    'wind': ko.observable(''),
+    'good': ko.observable(false)
+  };
+  // Function To Retreive The Weather
+  weatherReport = function(location) {
+    var url = "http://api.openweathermap.org/data/2.5/weather?" +
+      "lat=" + location[0] + "&lon=" + location[1] +
+      "&units=imperial&APPID=" + WEATHER_KEY;
+    $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'JSON',
+      success: function(result) {
+        var data = result;
+        weatherData.current.id(result.weather[0].id);
+        weatherData.current.main(result.weather[0].main);
+        weatherData.current.description(result.weather[0].description);
+        weatherData.temp(result.main.temp);
+        weatherData.clouds(result.clouds.all);
+        weatherData.wind(result.wind.speed);
+        weatherData.good(true);
+        $.extend(true, weatherData.current, {
+          iconCode: result.weather[0].icon
+        });
+        console.log('OpenWeather.org Data:', result);
+      },
+      error: function(result) {
+        Materialize.toast("Can't Get Weather. . .", 6000);
+      }
+    }).done(function() {
+      var weatherIcon = 'http://openweathermap.org/img/w/' + weatherData.current.iconCode + '.png';
+      $('#weatherIcon').attr("src", weatherIcon);
+      Materialize.toast('Weather Updated <img  src="' + weatherIcon + '" alt="Weather Icon"></img>', 6000);
+    });
+  };
+  weatherReport(model.defLoc);
+
+}
+
+
+
+
 
 //***************************************************************//
 // FOURSQUARE API
 //***************************************************//
 
-//***************************************************************//
-// LOCAL WEATHER
-//***************************************************//
 
-// Weather API Key
-var WEATHER_KEY = '6dc4f9aa6decdedf1ef5aab972c8471f';
-// Weather Data Layout. . . ooOOH ObServables OOooh
-weatherData = {
-  'current': {
-    'id': ko.observable(''),
-    'main': ko.observable(''),
-    'description': ko.observable(''),
-    'iconCode': '01d',
-  },
-  'temp': ko.observable(''),
-  'clouds': ko.observable(''),
-  'wind': ko.observable(''),
-  'good': ko.observable(false)
-};
-// Function To Retreive The Weather
-weatherReport = function(location) {
-  var url = "http://api.openweathermap.org/data/2.5/weather?" +
-    "lat=" + location[0] + "&lon=" + location[1] +
-    "&units=imperial&APPID=" + WEATHER_KEY;
-  $.ajax({
-    url: url,
-    type: 'GET',
-    dataType: 'JSON',
-    success: function(result) {
-      var data = result;
-      weatherData.current.id(result.weather[0].id);
-      weatherData.current.main(result.weather[0].main);
-      weatherData.current.description(result.weather[0].description);
-      weatherData.temp(result.main.temp);
-      weatherData.clouds(result.clouds.all);
-      weatherData.wind(result.wind.speed);
-      weatherData.good(true);
-      $.extend(true, weatherData.current, {
-        iconCode: result.weather[0].icon
-      });
-      console.log('OpenWeather.org Data:', result);
-    },
-    error: function(result) {
-      Materialize.toast("Can't Get Weather. . .", 6000);
-    }
-  }).done(function() {
-    var weatherIcon = 'http://openweathermap.org/img/w/' + self.weatherData.current.iconCode + '.png';
-    $('#weatherIcon').attr("src", weatherIcon);
-    Materialize.toast('Weather Updated <img  src="' + weatherIcon + '" alt="Weather Icon"></img>', 6000);
-  });
-  ko.applyBindings(weatherData);
-};
-weatherReport(model.defLoc);
+var app = new app();
+ko.applyBindings(app);
