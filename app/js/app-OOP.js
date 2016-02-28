@@ -115,7 +115,7 @@ var appInit = function() {
   }
   // Fires Up the Map.
   self.map = dispMap(self.defCenter);
-  newPlaces(model.default);
+  app.newPlaces(model.default);
   addToMap(places);
 
   $(document).ready(function() {
@@ -148,47 +148,58 @@ var appInit = function() {
 };
 
 //***************************************************************//
-// PLACES CONSTRUCTOR
+// APPLICATION CONSTRUCTOR
 //***************************************************//
 
-/**
- * @description Creates the places object-s. creates defaults for
- *  each incoming place. Transfers existing information into
- *  newly created place.
- * @param places: Empty array for storing places.
- * @param place: Object function, scaffolds out defaults for a new
- *  place.
- * @param newPlaces: Function, loops over incoming data from the model,
- *  or can be used to loop over incoming data from an api call to make
- *  the app Dynamic. Loops over data, pushes a new place to the array.
- */
+var app = function(){
 
-var places = [];
+var self = this;
 
-var place = function(input) {
-  this.name = input.name;
-  this.lat = input.loc[0];
-  this.lng = input.loc[1];
-  this.zoom = input.loc[2];
-  this.coords = {
-    lat: this.lat,
-    lng: this.lng
+  //***************************************************************//
+  // PLACES CONSTRUCTOR
+  //***************************************************//
+
+  /**
+   * @description Creates the places object-s. creates defaults for
+   *  each incoming place. Transfers existing information into
+   *  newly created place.
+   * @param places: Empty array for storing places.
+   * @param place: Object function, scaffolds out defaults for a new
+   *  place.
+   * @param newPlaces: Function, loops over incoming data from the model,
+   *  or can be used to loop over incoming data from an api call to make
+   *  the app Dynamic. Loops over data, pushes a new place to the array.
+   */
+
+  var places = [];
+  var place = function(input) {
+    this.name = input.name;
+    this.lat = input.loc[0];
+    this.lng = input.loc[1];
+    this.zoom = input.loc[2];
+    this.coords = {
+      lat: this.lat,
+      lng: this.lng
+    };
+    this.icon = input.icon;
+    this.VENUE_ID = input.venue_id;
+    this.url = ko.observable('');
+    this.address = ko.observable('');
+    this.venueRating = ko.observable('');
+    this.categories = ko.observable('');
+    this.hereNow = ko.observable('');
+    this.photosPrefix = ko.observable('');
+    this.photosSuffix = ko.observable('');
   };
-  this.icon = input.icon;
-  this.VENUE_ID = input.venue_id;
-  this.url = ko.observable('');
-  this.address = ko.observable('');
-  this.venueRating = ko.observable('');
-  this.categories = ko.observable('');
-  this.hereNow = ko.observable('');
-  this.photosPrefix = ko.observable('');
-  this.photosSuffix = ko.observable('');
+  var newPlaces = function(input) {
+    for (var i = 0; i < input.length; i++) {
+      places.push(new place(input[i]));
+    }
+  };
+
+
 };
-var newPlaces = function(input) {
-  for (var i = 0; i < input.length; i++) {
-    places.push(new place(input[i]));
-  }
-};
+
 
 //***************************************************************//
 // PLACES PROTOTYPES
