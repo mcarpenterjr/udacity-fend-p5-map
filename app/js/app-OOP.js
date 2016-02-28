@@ -307,6 +307,7 @@ function app() {
   //***************************************************************//
   // SEARCH FUNCTION
   //***************************************************//
+  self.searchQuery = ko.observable("");
 
   self.locList = function(locs) {
     self.locListItem = [];
@@ -324,9 +325,8 @@ function app() {
 
   self.searchF = function() {
     self.results.removeAll();
-
-    for (var i = 0; i < model.markers.length; i++) {
-      model.markers[i].setVisible(false);
+    for (var i = 0; i < self.places.length; i++) {
+      self.places[i].marker.setVisible(false);
     }
     self.searchables.forEach(function(item, index, array) {
       if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
