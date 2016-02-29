@@ -115,7 +115,7 @@ var appInit = function() {
   }
   // Fires Up the Map.
   self.map = dispMap(self.defCenter);
-  app.addToMap(app.places);
+  app.newPlaces(model.default);
 
   $(document).ready(function() {
     $('.button-collapse').sideNav({
@@ -176,8 +176,8 @@ function app() {
    *  the app Dynamic. Loops over data, pushes a new place to the array.
    */
 
-  self.places = [];
-  self.place = function(input) {
+  self.places = ko.observableArray([]);
+  place = function(input) {
     this.name = input.name;
     this.lat = input.loc[0];
     this.lng = input.loc[1];
@@ -195,35 +195,7 @@ function app() {
     this.hereNow = ko.observable('');
     this.photosPrefix = ko.observable('');
     this.photosSuffix = ko.observable('');
-  };
-  self.newPlaces = function(input) {
-    for (var i = 0; i < input.length; i++) {
-      self.places.push(new self.place(input[i]));
-    }
-  };
-  self.newPlaces(model.default);
 
-  //***************************************************************//
-  // PLACES PROTOTYPES
-  //***************************************************//
-  /**
-   * @description Console logging function for testing, add
-   *  or remove logs as neccesary.
-   */
-
-  self.place.prototype.log = function() {
-    console.log(this.name);
-    console.log(this.lat);
-    console.log(this.lng);
-    console.log(this.zoom);
-    console.log(this.coords);
-    console.log(this.icon);
-    console.log(this.VENUE_ID);
-    console.log(this.url);
-  };
-  //places[0].log();
-
-  self.place.prototype.marker = function() {
     var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
     var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
     var markerOptions = {
@@ -293,15 +265,36 @@ function app() {
     });
     self.places.push(newMarker);
     self.places.pop();
-  };
-  // places[0].addMarker();
-  // console.log("This is the first index of the places array: ",places[0]);
-  // console.log("This is the places Array: ",places);
 
-  self.addToMap = function(input) {
+  };
+  self.newPlaces = function(input) {
     for (var i = 0; i < input.length; i++) {
-      input[i].marker();
+      self.places.push(new place(input[i]));
     }
+  };
+
+  //***************************************************************//
+  // PLACES PROTOTYPES
+  //***************************************************//
+  /**
+   * @description Console logging function for testing, add
+   *  or remove logs as neccesary.
+   */
+
+   place.prototype.log = function() {
+    console.log(this.name);
+    console.log(this.lat);
+    console.log(this.lng);
+    console.log(this.zoom);
+    console.log(this.coords);
+    console.log(this.icon);
+    console.log(this.VENUE_ID);
+    console.log(this.url);
+  };
+  //places[0].log();
+
+  place.prototype.visible = function() {
+    
   };
 
   //***************************************************************//
