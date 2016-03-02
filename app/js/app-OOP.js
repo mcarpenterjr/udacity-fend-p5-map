@@ -90,22 +90,24 @@ var model = new model();
 // Initialize Map Function
 //***************************************************//
 
+// Default Zoom Level
+var defZoom = model.defLoc[2];
+// Default View center, converted to Google Maps LatLng.
+var defCenter = {
+  lat: model.defLoc[0],
+  lng: model.defLoc[1]
+};
+
+
 var appInit = function() {
   var self = this;
-  // Default Zoom Level
-  self.defZoom = model.defLoc[2];
-  // Default View center, converted to Google Maps LatLng.
-  self.defCenter = {
-    lat: model.defLoc[0],
-    lng: model.defLoc[1]
-  };
 
   function dispMap(latlng) {
     var marker;
     var mapDisp = document.getElementById('map');
     var gLatLng = latlng;
     var mapOptions = {
-      zoom: self.defZoom,
+      zoom: defZoom,
       mapTypeId: google.maps.MapTypeId.HYBRID,
       center: gLatLng,
       disableDefaultUI: true
@@ -114,7 +116,7 @@ var appInit = function() {
     return map;
   }
   // Fires Up the Map.
-  self.map = dispMap(self.defCenter);
+  self.map = dispMap(defCenter);
   app.newPlaces(model.default);
 
   $(document).ready(function() {
@@ -152,17 +154,10 @@ var appInit = function() {
 
 function app() {
   var self = this;
+  self.places = ko.observableArray([]);
   //***************************************************************//
   // PLACES CONSTRUCTOR
   //***************************************************//
-
-  // Default Zoom Level
-  self.defZoom = model.defLoc[2];
-  // Default View center, converted to Google Maps LatLng.
-  self.defCenter = {
-    lat: model.defLoc[0],
-    lng: model.defLoc[1]
-  };
 
   /**
    * @description Creates the places object-s. creates defaults for
@@ -176,8 +171,7 @@ function app() {
    *  the app Dynamic. Loops over data, pushes a new place to the array.
    */
 
-  self.places = ko.observableArray([]);
-  place = function(input) {
+  var place = function(input) {
     this.name = input.name;
     this.lat = input.loc[0];
     this.lng = input.loc[1];
@@ -195,26 +189,22 @@ function app() {
     this.hereNow = ko.observable('');
     this.photosPrefix = ko.observable('');
     this.photosSuffix = ko.observable('');
-
-    var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
-    var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
-    var markerOptions = {
+    this.newMarker = new google.maps.Marker({
       position: this.coords,
       map: map,
       title: this.name,
       animation: google.maps.Animation.DROP,
       clickable: true,
       icon: this.icon,
-    };
-    var infoWindowOpen = false;
-    var infoWindowOptions = {
+    });
+    this.infoWindow = new google.maps.InfoWindow({
       content: this.name,
       position: this.coords,
       disableAutoPan: false,
-    };
-    var newMarker = new google.maps.Marker(markerOptions);
-    var newInfoWindow = new google.maps.InfoWindow(infoWindowOptions);
+    });
 
+    var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
+    var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
     var url = "https://api.foursquare.com/v2/venues/" +
       this.VENUE_ID +
       "?client_id=" + FSCLIENT_ID +
@@ -224,11 +214,12 @@ function app() {
     $.ajax({
       url: url,
       type: 'GET',
+      context: this,
       dataType: 'JSON',
       success: function(data) {
         infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
           "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
-        newInfoWindow.setContent(infoWindowHTML);
+        this.infoWindow.setContent(infoWindowHTML);
         console.log('Info Window Content from NEWMARKER', data);
       },
       error: function(result) {
@@ -238,32 +229,27 @@ function app() {
 
     });
 
-    newMarker.addListener('click', function() {
+    var marker = this.newMarker;
+    var infowindow = this.infoWindow;
+
+    this.newMarker.addListener('click', function() {
       map.setZoom(17);
-      map.setCenter(newMarker.getPosition());
-      if (newMarker.getAnimation() !== null) {
-        newMarker.setAnimation(null);
-        map.setZoom(self.defZoom);
-        map.setCenter(self.defCenter);
+      map.setCenter(marker.getPosition());
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+        map.setZoom(defZoom);
+        map.setCenter(defCenter);
       } else {
-        newMarker.setAnimation(google.maps.Animation.BOUNCE);
+        marker.setAnimation(google.maps.Animation.BOUNCE);
       }
-      if (infoWindowOpen === true) {
-        newInfoWindow.close(map, newMarker);
-        infoWindowOpen = false;
-      } else {
-        newInfoWindow.open(map, newMarker);
-        infoWindowOpen = true;
-      }
-      // newInfoWindow.open(map, newMarker);
+      // this.infoWindow.open(map, this.newMarker);
     });
-    newInfoWindow.addListener('closeclick', function() {
-      infoWindowOpen = false;
-      map.setZoom(self.defZoom);
-      map.setCenter(self.defCenter);
-      newMarker.setAnimation(null);
+    this.infoWindow.addListener('closeclick', function() {
+      map.setZoom(defZoom);
+      map.setCenter(defCenter);
+      marker.setAnimation(null);
     });
-    self.places.push(newMarker);
+    self.places.push(this.newMarker);
     self.places.pop();
 
   };
@@ -276,6 +262,7 @@ function app() {
   //***************************************************************//
   // PLACES PROTOTYPES
   //***************************************************//
+
   /**
    * @description Console logging function for testing, add
    *  or remove logs as neccesary.
@@ -290,12 +277,26 @@ function app() {
     console.log(this.icon);
     console.log(this.VENUE_ID);
     console.log(this.url);
+    console.log(this.newMarker);
+    console.log(this.infoWindow);
   };
   //places[0].log();
 
+  /**
+   * @description Marker Visibility toggle.
+   */
+
   place.prototype.visible = function() {
-    
+      this.newMarker.setVisible(true);
   };
+  place.prototype.hidden = function() {
+      this.newMarker.setVisible(false);
+  };
+
+  place.prototype.open = function() {
+      this.newMarker.setVisible(false);
+  };
+
 
   //***************************************************************//
   // SEARCH FUNCTION
@@ -319,13 +320,13 @@ function app() {
   self.searchF = function() {
     self.results.removeAll();
     for (var i = 0; i < self.places.length; i++) {
-      self.places[i].marker.setVisible(false);
+      self.places[i].hidden();
     }
     self.searchables.forEach(function(item, index, array) {
       if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
         self.results.push(self.locListItem[index]);
 
-        model.markers[index].setVisible(true);
+        self.places[index].visible();
       }
     });
 
@@ -339,15 +340,6 @@ function app() {
       });
     }
   }.bind(this);
-
-  self.clearSearch = function() {
-    self.searchQuery('');
-    if (openInfoWindow) openInfoWindow.close();
-    if (markerBouncing) markerBouncing.setAnimation(null);
-    self.searchF();
-    self.map.panTo(self.defCenter);
-    self.map.setZoom(self.defZoom);
-  };
 
   //***************************************************************//
   // LOCAL WEATHER
