@@ -233,8 +233,7 @@ function app() {
     var infowindow = this.infoWindow;
 
     this.newMarker.addListener('click', function() {
-      map.setZoom(17);
-      map.setCenter(marker.getPosition());
+
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
         map.setZoom(defZoom);
@@ -294,7 +293,15 @@ function app() {
   };
 
   place.prototype.open = function() {
-      this.newMarker.setVisible(false);
+
+      this.infoWindow.open(map, this.newMarker);
+      map.setZoom(this.zoom);
+      map.setCenter(this.coords);
+  };
+  place.prototype.close = function() {
+      this.infoWindow.close();
+      map.setZoom(defZoom);
+      map.setCenter(defCenter);
   };
 
 
@@ -315,7 +322,7 @@ function app() {
     self.results = ko.observableArray(self.locListItem.slice(0));
   };
   // Invokes initResults function on our locations.
-  self.locList(self.places);
+  self.locList(this.places);
 
   self.searchF = function() {
     self.results.removeAll();
