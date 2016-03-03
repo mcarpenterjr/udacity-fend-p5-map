@@ -233,13 +233,14 @@ function app() {
     var infowindow = this.infoWindow;
 
     this.newMarker.addListener('click', function() {
-
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
         map.setZoom(defZoom);
         map.setCenter(defCenter);
+        infowindow.close();
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        infowindow.open(map, marker);
       }
       // this.infoWindow.open(map, this.newMarker);
     });
@@ -293,10 +294,10 @@ function app() {
   };
 
   place.prototype.open = function() {
-
       this.infoWindow.open(map, this.newMarker);
       map.setZoom(this.zoom);
       map.setCenter(this.coords);
+      this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
   };
   place.prototype.close = function() {
       this.infoWindow.close();
