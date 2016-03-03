@@ -154,7 +154,8 @@ var appInit = function() {
 
 function app() {
   var self = this;
-  self.places = ko.observableArray([]);
+  self.places = [];
+  self.placesSearch = ko.observableArray(self.places);
   //***************************************************************//
   // PLACES CONSTRUCTOR
   //***************************************************//
@@ -268,7 +269,7 @@ function app() {
    *  or remove logs as neccesary.
    */
 
-   place.prototype.log = function() {
+  place.prototype.log = function() {
     console.log(this.name);
     console.log(this.lat);
     console.log(this.lng);
@@ -287,22 +288,22 @@ function app() {
    */
 
   place.prototype.visible = function() {
-      this.newMarker.setVisible(true);
+    this.newMarker.setVisible(true);
   };
   place.prototype.hidden = function() {
-      this.newMarker.setVisible(false);
+    this.newMarker.setVisible(false);
   };
 
   place.prototype.open = function() {
-      this.infoWindow.open(map, this.newMarker);
-      map.setZoom(this.zoom);
-      map.setCenter(this.coords);
-      this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
+    this.infoWindow.open(map, this.newMarker);
+    map.setZoom(this.zoom);
+    map.setCenter(this.coords);
+    this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
   };
   place.prototype.close = function() {
-      this.infoWindow.close();
-      map.setZoom(defZoom);
-      map.setCenter(defCenter);
+    this.infoWindow.close();
+    map.setZoom(defZoom);
+    map.setCenter(defCenter);
   };
 
 
@@ -311,43 +312,14 @@ function app() {
   //***************************************************//
   self.searchQuery = ko.observable("");
 
-  self.locList = function(locs) {
-    self.locListItem = [];
-    self.searchables = [];
-    for (i = 0; i < locs.length; i++) {
-      var item = locs[i].name;
-      self.locListItem.push(item);
-      self.searchables.push(item.toLowerCase());
-      console.log('Added: ', item, 'to the list');
-    }
-    self.results = ko.observableArray(self.locListItem.slice(0));
-  };
-  // Invokes initResults function on our locations.
-  self.locList(this.places);
-
-  self.searchF = function() {
-    self.results.removeAll();
-    for (var i = 0; i < self.places.length; i++) {
-      self.places[i].hidden();
-    }
-    self.searchables.forEach(function(item, index, array) {
-      if (item.indexOf(self.searchQuery().toLowerCase()) > -1) {
-        self.results.push(self.locListItem[index]);
-
-        self.places[index].visible();
+  self.search = function(value) {
+    self.placesSearch.removeAll();
+    for (var x in self.placesSearch) {
+      if (self.placesSearch[x].name.toLowerCase().indexof(value.name.toLowerCase()) >= 0 ) {
+        self.placesSearch.push(self.placesSearch[x]);
       }
-    });
-
-    //If the filter input is empty, resets all locations to be visible
-    if (self.searchQuery() === '') {
-      self.results(self.locListItem.slice(0));
-      model.markers.forEach(function(item, index, array) {
-        if (!item.getVisible()) {
-          item.setVisible(true);
-        }
-      });
     }
-  }.bind(this);
+  };
 
   //***************************************************************//
   // LOCAL WEATHER
@@ -415,3 +387,4 @@ function app() {
 
 var app = new app();
 ko.applyBindings(app);
+app.searchQuery.subscribe(app.search);

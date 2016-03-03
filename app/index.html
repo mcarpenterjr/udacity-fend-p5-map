@@ -46,10 +46,10 @@
           <div class="amber collapsible-body">
             <form id="searchBox" class="amber darken-2">
               <div class="input-field hoverable">
-                <input id="search" placeholder="Filter. . ." type="text" class="validate blue-text text-darken-1" data-bind="textInput: searchQuery, event: { keyup: searchF }" autocomplete="off" />
+                <input id="search" placeholder="Filter. . ." type="text" class="validate blue-text text-darken-1" data-bind="value: searchQuery, valueUpdate: 'keyup'" autocomplete="off" />
               </div>
             </form>
-            <ul data-bind="foreach: places">
+            <ul data-bind="foreach: placesSearch">
               <li class="collection-item amber">
                 <a class="truncate" href="#" data-bind="click: $data.open">
                   <span class="blue-text text-darken-1" data-bind="text: $data.name"></span>
