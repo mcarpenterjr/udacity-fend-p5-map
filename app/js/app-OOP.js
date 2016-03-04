@@ -319,13 +319,16 @@ function app() {
     self.placesResults.removeAll();
     console.log('WE ARE SEARCHING!!!!');
 
-    if (value === '') return;
-
-    for (var place in self.placesResults) {
-      if (self.placesResults[place].name.toLowerCase().indexof(value.toLowerCase()) >= 0 ) {
-        self.placesResults.push(self.places[place]);
-      }
+    for (var i = 0; i < self.places.length; i++) {
+      self.places[i].hidden();
     }
+    for (var place in self.places) {
+      if (self.places[place].name.toLowerCase().indexOf(value.toLowerCase()) >=0 ) {
+      self.places[place].visible();
+      self.placesResults.push(self.places[place]);
+    }
+    }
+
   };
 
   //***************************************************************//
