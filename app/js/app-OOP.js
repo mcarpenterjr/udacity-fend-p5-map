@@ -308,6 +308,7 @@ function app() {
     this.infoWindow.close();
     map.setZoom(defZoom);
     map.setCenter(defCenter);
+    this.newMarker.setAnimation(null);
   };
 
 
@@ -323,10 +324,11 @@ function app() {
       self.places[i].hidden();
     }
     for (var place in self.places) {
-      if (self.places[place].name.toLowerCase().indexOf(value.toLowerCase()) >=0 ) {
-      self.places[place].visible();
-      self.placesResults.push(self.places[place]);
-    }
+      if (self.places[place].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        self.places[place].visible();
+        self.placesResults.push(self.places[place]);
+        console.log("WE'RE FILTERING!!!!!!!!!!");
+      }
     }
 
   };
