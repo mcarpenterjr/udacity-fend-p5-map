@@ -155,7 +155,9 @@ var appInit = function() {
 function app() {
   var self = this;
   self.places = [];
-  self.placesSearch = ko.observableArray(self.places);
+  self.placesResults = ko.observableArray([]);
+  self.query = ko.observable('');
+
   //***************************************************************//
   // PLACES CONSTRUCTOR
   //***************************************************//
@@ -239,11 +241,12 @@ function app() {
         map.setZoom(defZoom);
         map.setCenter(defCenter);
         infowindow.close();
+        console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         infowindow.open(map, marker);
+        console.log('open window');
       }
-      // this.infoWindow.open(map, this.newMarker);
     });
     this.infoWindow.addListener('closeclick', function() {
       map.setZoom(defZoom);
@@ -257,6 +260,7 @@ function app() {
   self.newPlaces = function(input) {
     for (var i = 0; i < input.length; i++) {
       self.places.push(new place(input[i]));
+      self.placesResults.push(self.places[i]);
     }
   };
 
@@ -310,13 +314,16 @@ function app() {
   //***************************************************************//
   // SEARCH FUNCTION
   //***************************************************//
-  self.searchQuery = ko.observable("");
 
   self.search = function(value) {
-    self.placesSearch.removeAll();
-    for (var x in self.placesSearch) {
-      if (self.placesSearch[x].name.toLowerCase().indexof(value.name.toLowerCase()) >= 0 ) {
-        self.placesSearch.push(self.placesSearch[x]);
+    self.placesResults.removeAll();
+    console.log('WE ARE SEARCHING!!!!');
+
+    if (value === '') return;
+
+    for (var place in self.placesResults) {
+      if (self.placesResults[place].name.toLowerCase().indexof(value.toLowerCase()) >= 0 ) {
+        self.placesResults.push(self.places[place]);
       }
     }
   };
@@ -369,22 +376,14 @@ function app() {
     }).done(function() {
       var weatherIcon = 'http://openweathermap.org/img/w/' + weatherData.current.iconCode + '.png';
       $('#weatherIcon').attr("src", weatherIcon);
-      Materialize.toast('Weather Updated <img  src="' + weatherIcon + '" alt="Weather Icon"></img>', 6000);
+      Materialize.toast('Weather Updated <img  src="' + weatherIcon + '" alt="Weather Icon"></img>' + weatherData.temp() + ' &#8457', 6000);
     });
   };
   weatherReport(model.defLoc);
-
 }
 
-
-
-
-
-//***************************************************************//
-// FOURSQUARE API
-//***************************************************//
-
-
 var app = new app();
+app.query.subscribe(function(newValue) {
+  app.search(newValue);
+});
 ko.applyBindings(app);
-app.searchQuery.subscribe(app.search);
