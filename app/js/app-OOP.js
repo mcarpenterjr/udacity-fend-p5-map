@@ -113,7 +113,14 @@ var appInit = function() {
       disableDefaultUI: true
     };
     var map = new google.maps.Map(mapDisp, mapOptions);
+    map.addListener('center_changed', function() {
+      window.setTimeout(function() {
+        map.panTo(marker.getPosition());
+        console.log('Changing Center');
+      }, 1500);
+    });
     return map;
+
   }
   // Fires Up the Map.
   self.map = dispMap(defCenter);
@@ -146,6 +153,29 @@ var appInit = function() {
     html: true,
     timer: 8500,
   });
+};
+
+var loadError = function() {
+  swal({
+      title: "WHOOPS. . .",
+      text: '<div class="progress"><div class="indeterminate"></div></div>' +
+        '<div class="card blue-grey darken-1">' +
+        '<div class="card-content white-text">' +
+        '<p>There seems to be a problem loading our app, we will try again.</p>' +
+        '<br><span>Google Maps <i class="fa fa-map-o pink-text text-lighten-1"></i></span>' +
+        '</div>' +
+        '</div>' +
+        '</div>',
+      showCancelButton: false,
+      showConfirmButton: true,
+      confirmButtonText: "Retry",
+      confirmButtonColor: "#ffb300",
+      html: true,
+      timer: 8500,
+    },
+    function() {
+      document.location.reload(true);
+    });
 };
 
 //***************************************************************//
@@ -185,13 +215,16 @@ function app() {
     };
     this.icon = input.icon;
     this.VENUE_ID = input.venue_id;
-    this.url = ko.observable('');
-    this.address = ko.observable('');
-    this.venueRating = ko.observable('');
-    this.categories = ko.observable('');
-    this.hereNow = ko.observable('');
-    this.photosPrefix = ko.observable('');
-    this.photosSuffix = ko.observable('');
+    this.url = '';
+    this.address = '';
+    this.venueRating = '';
+    this.categories = '';
+    this.hereNow = '';
+    this.photosPrefix = '';
+    this.photosSuffix = '';
+    this.content =
+      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
+        "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
     this.newMarker = new google.maps.Marker({
       position: this.coords,
       map: map,
@@ -201,7 +234,7 @@ function app() {
       icon: this.icon,
     });
     this.infoWindow = new google.maps.InfoWindow({
-      content: this.name,
+      content: this.content,
       position: this.coords,
       disableAutoPan: false,
     });
@@ -220,16 +253,19 @@ function app() {
       context: this,
       dataType: 'JSON',
       success: function(data) {
-        infoWindowHTML = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" + "<p>" + data.response.venue.location.address +
-          "</p><p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + data.response.venue.categories[0].name + "</p><p>" + data.response.venue.hereNow.count + " people checked-in now</p>" + "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
-        this.infoWindow.setContent(infoWindowHTML);
+        this.url = data.response.venue.canonicalUrl;
+        data.response.venue.name;
+        data.response.venue.location.address;
+        data.response.venue.rating;
+        data.response.venue.categories[0].name;
+        data.response.venue.hereNow.count;
+        data.response.venue.photos.groups[0].items[0].prefix;
+        data.response.venue.photos.groups[0].items[0].suffix;
         console.log('Info Window Content from NEWMARKER', data);
       },
       error: function(result) {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
       }
-    }).done(function() {
-
     });
 
     var marker = this.newMarker;

@@ -1,80 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#ffc107">
-  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
-  <link type="text/css" rel="stylesheet" href="css/sweetalert.css" />
-  <link rel="stylesheet" href="css/font-awesome.css" />
-  <link rel="stylesheet" href="css/main.css" />
+  <meta charset="utf-8">
   <title>West Dover Vermont, Places</title>
-</head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffc107">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="css/materialize.css" media="screen,projection">
+  <link rel="stylesheet" href="css/sweetalert.css">
+  <link rel="stylesheet" href="css/font-awesome.css">
+  <link rel="stylesheet" href="css/main.css">
 
-<body>
-  <div id="map"></div>
-  <ul id="slide-out" class="side-nav fixed amber darken-2">
-    <li class="amber darken-2">
-      <div class="card amber darken-1 blue-text text-darken-1">
-        <div class="card-content">
-          <span class="card-title">West Dover, VT<i class="fa fa-map-marker fa-fw blue-text"></i></span>
+  <body>
+    <div id="map"></div>
+    <ul id="slide-out" class="side-nav fixed amber darken-2">
+      <li class="amber darken-2">
+        <div class="card amber darken-1 blue-text text-darken-1">
+          <div class="card-content">
+            <span class="card-title">West Dover, VT<i class="fa fa-map-marker fa-fw blue-text"></i>
+            </span>
+          </div>
         </div>
-      </div>
-    </li>
-    <li class="amber darken-2" data-bind="visible: weatherData.good">
-      <div class="card amber darken-1 blue-text text-darken-1">
-        <div class="card-content">
-          <span class="card-title">Weather</span>
-          <ul class="collection">
-            <li id="weather" class="collection-item center-align amber">
-              Currently:</br><img id="weatherIcon" src="" alt="Weather Icon"></img>
-              </br><span data-bind="text: weatherData.current.description" class="center-align blue-text text-darken-1"></span>
-              </br><span data-bind="text: weatherData.temp" class="center-align blue-text text-darken-1"></span>&#8457;
-              </br>Clouds:&nbsp<span data-bind="text: weatherData.clouds" class="center-align blue-text text-darken-1"></span>%
-              </br>Wind:&nbsp<span data-bind="text: weatherData.wind" class="center-align blue-text text-darken-1"></span>mph.
-            </li>
-          </ul>
-        </div>
-      </div>
-    </li>
-    <li class="no-padding amber">
-      <ul class="collapsible collapsible-accordion">
-        <li class="amber">
-          <a class="collapsible-header blue-text text-darken-1 center-align">Places<i class="fa fa-caret-down fa-fw"></i></a>
-          <div class="amber collapsible-body">
-            <form id="searchBox" class="amber darken-2">
-              <div class="input-field hoverable">
-                <input id="search" placeholder="Filter. . ." type="text" class="validate blue-text text-darken-1" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
-              </div>
-            </form>
-            <ul data-bind="foreach: placesResults">
-              <li class="collection-item amber">
-                <a class="truncate" href="#" data-bind="click: $data.open">
-                  <span class="blue-text text-darken-1" data-bind="text: $data.name"></span>
-                  <i class="pink-text text-lighten-1 fa fa-foursquare fa-fw"></i></a>
+      </li>
+      <li class="amber darken-2" data-bind="visible: weatherData.good">
+        <div class="card amber darken-1 blue-text text-darken-1">
+          <div class="card-content">
+            <span class="card-title">Weather</span>
+            <ul class="collection">
+              <li id="weather" class="collection-item center-align amber">
+                Currently:<br>
+                <img src="" id="weatherIcon" alt="Weather Icon">
+                <br>
+                <span data-bind="text: weatherData.current.description" class="center-align blue-text text-darken-1"></span>
+                <br>
+                <span data-bind="text: weatherData.temp" class="center-align blue-text text-darken-1"></span>&#8457;
+                <br>Clouds:&nbsp;<span data-bind="text: weatherData.clouds" class="center-align blue-text text-darken-1"></span>%
+                <br>Wind:&nbsp;<span data-bind="text: weatherData.wind" class="center-align blue-text text-darken-1"></span>mph.
               </li>
             </ul>
           </div>
-        </li>
-      </ul>
-    </li>
-  </ul>
-  <a id="menuToggle" href="#" data-activates="slide-out" class="amber btn waves-effect waves-dark button-collapse"><i class="blue-text text-darken-1 fa fa-bars fa-4x"></i></a>
+        </div>
+      </li>
+      <li class="no-padding amber">
+        <ul class="collapsible collapsible-accordion">
+          <li class="amber">
+            <a class="collapsible-header blue-text text-darken-1 center-align">Places<i class="fa fa-caret-down fa-fw"></i>
+            </a>
+            <div class="amber collapsible-body">
+              <form id="searchBox" class="amber darken-2">
+                <div class="input-field hoverable">
+                  <input id="search" placeholder="Filter. . ." type="text" class="validate blue-text text-darken-1" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off"/>
+                </div>
+              </form>
+              <ul data-bind="foreach: placesResults">
+                <li class="collection-item amber">
+                  <a class="truncate" href="#" data-bind="click: $data.open">
+                    <span class="blue-text text-darken-1" data-bind="text: $data.name"></span>
+                    <i class="pink-text text-lighten-1 fa fa-foursquare fa-fw"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <a id="menuToggle" href="#" data-activates="slide-out" class="amber btn waves-effect waves-dark button-collapse">
+      <i class="blue-text text-darken-1 fa fa-bars fa-4x"></i>
+    </a>
 
-  <!-- Script Stuff -->
+    <!-- Script Stuff -->
 
-  <!-- <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <!-- <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
   <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script> -->
 
-  <script type="text/javascript" src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/materialize.js"></script>
-  <script type="text/javascript" src="js/knockout.js"></script>
-  <script type="text/javascript" src="js/knockout.mapping.js"></script>
-  <script type="text/javascript" src="js/sweetalert.js"></script>
-  <script type="text/javascript" src="js/app-OOP.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM&callback=appInit"></script>
-</body>
+    <script src="js/jquery.js"></script>
+    <script src="js/materialize.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="js/knockout.mapping.js"></script>
+    <script src="js/sweetalert.js"></script>
+    <script src="js/app-OOP.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkVsabjVbGABsd4Cu0_3keXBDV0t0MsLM&callback=appInit" onerror="loadError()"></script>
+  </body>
 
 </html>
