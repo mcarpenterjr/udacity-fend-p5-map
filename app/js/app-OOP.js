@@ -113,15 +113,10 @@ var appInit = function() {
       disableDefaultUI: true
     };
     var map = new google.maps.Map(mapDisp, mapOptions);
-    map.addListener('center_changed', function() {
-      window.setTimeout(function() {
-        map.panTo(marker.getPosition());
-        console.log('Changing Center');
-      }, 1500);
-    });
     return map;
 
   }
+
   // Fires Up the Map.
   self.map = dispMap(defCenter);
   app.newPlaces(model.default);
@@ -261,7 +256,7 @@ function app() {
     });
     this.content =
       "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
-        "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
+      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
 
     var marker = this.newMarker;
     var infowindow = this.infoWindow;
@@ -274,6 +269,8 @@ function app() {
         console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        map.setZoom(marker.zoom);
+        map.panTo(marker.getPosition());
         console.log('open window');
       }
     });
@@ -342,17 +339,16 @@ function app() {
   self.search = function(value) {
     self.placesResults.removeAll();
     console.log('WE ARE SEARCHING!!!!');
-
-    for (var i = 0; i < self.places.length; i++) {
-      self.places[i].hidden();
-    }
-    for (var place in self.places) {
-      if (self.places[place].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        self.places[place].visible();
-        self.placesResults.push(self.places[place]);
+    self.places.forEach(function(place) {
+      if (place.name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        place.visible();
+        self.placesResults.push(place);
         console.log("WE'RE FILTERING!!!!!!!!!!");
+      } else {
+        place.hidden();
+        console.log('PUT THE ' + place.name + ' AWAY!');
       }
-    }
+    });
 
   };
 
@@ -368,6 +364,7 @@ function app() {
       'id': ko.observable(''),
       'main': ko.observable(''),
       'description': ko.observable(''),
+      'icon': ko.observable(''),
       'iconCode': '01d',
     },
     'temp': ko.observable(''),
@@ -389,22 +386,18 @@ function app() {
         weatherData.current.id(result.weather[0].id);
         weatherData.current.main(result.weather[0].main);
         weatherData.current.description(result.weather[0].description);
+        weatherData.current.icon('http://openweathermap.org/img/w/' + result.weather[0].icon + '.png');
         weatherData.temp(result.main.temp);
         weatherData.clouds(result.clouds.all);
         weatherData.wind(result.wind.speed);
         weatherData.good(true);
-        $.extend(true, weatherData.current, {
-          iconCode: result.weather[0].icon
-        });
         console.log('OpenWeather.org Data:', result);
       },
       error: function(result) {
         Materialize.toast("Can't Get Weather. . .", 6000);
       }
     }).done(function() {
-      var weatherIcon = 'http://openweathermap.org/img/w/' + weatherData.current.iconCode + '.png';
-      $('#weatherIcon').attr("src", weatherIcon);
-      Materialize.toast('Weather Updated <img  src="' + weatherIcon + '" alt="Weather Icon"></img>' + weatherData.temp() + ' &#8457', 6000);
+      Materialize.toast('Weather Updated <img  src="' + weatherData.current.icon() + '" alt="Weather Icon"></img>' + weatherData.temp() + ' &#8457', 6000);
     });
   };
   weatherReport(model.defLoc);

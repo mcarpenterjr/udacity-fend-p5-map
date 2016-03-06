@@ -28,7 +28,7 @@
             <ul class="collection">
               <li id="weather" class="collection-item center-align amber">
                 Currently:<br>
-                <img src="" id="weatherIcon" alt="Weather Icon">
+                <img data-bind="attr: { src: weatherData.current.icon }" src="" id="weatherIcon" alt="Weather Icon">
                 <br>
                 <span data-bind="text: weatherData.current.description" class="center-align blue-text text-darken-1"></span>
                 <br>
