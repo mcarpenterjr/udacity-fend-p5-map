@@ -204,7 +204,7 @@ function app() {
    *  the app Dynamic. Loops over data, pushes a new place to the array.
    */
 
-  var place = function(input) {
+  var Place = function(input) {
     this.name = input.name;
     this.lat = input.loc[0];
     this.lng = input.loc[1];
@@ -222,9 +222,6 @@ function app() {
     this.hereNow = '';
     this.photosPrefix = '';
     this.photosSuffix = '';
-    this.content =
-      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
-        "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
     this.newMarker = new google.maps.Marker({
       position: this.coords,
       map: map,
@@ -232,11 +229,6 @@ function app() {
       animation: google.maps.Animation.DROP,
       clickable: true,
       icon: this.icon,
-    });
-    this.infoWindow = new google.maps.InfoWindow({
-      content: this.content,
-      position: this.coords,
-      disableAutoPan: false,
     });
 
     var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
@@ -254,40 +246,36 @@ function app() {
       dataType: 'JSON',
       success: function(data) {
         this.url = data.response.venue.canonicalUrl;
-        data.response.venue.name;
-        data.response.venue.location.address;
-        data.response.venue.rating;
-        data.response.venue.categories[0].name;
-        data.response.venue.hereNow.count;
-        data.response.venue.photos.groups[0].items[0].prefix;
-        data.response.venue.photos.groups[0].items[0].suffix;
+        this.name = data.response.venue.name;
+        this.address = data.response.venue.location.address;
+        this.venueRating = data.response.venue.rating;
+        this.categories = data.response.venue.categories[0].name;
+        this.hereNow = data.response.venue.hereNow.count;
+        this.photosPrefix = data.response.venue.photos.groups[0].items[0].prefix;
+        this.photosSuffix = data.response.venue.photos.groups[0].items[0].suffix;
         console.log('Info Window Content from NEWMARKER', data);
       },
       error: function(result) {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
       }
     });
+    this.content =
+      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
+        "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
 
     var marker = this.newMarker;
     var infowindow = this.infoWindow;
 
-    this.newMarker.addListener('click', function() {
+    marker.addListener('click', function() {
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
         map.setZoom(defZoom);
         map.setCenter(defCenter);
-        infowindow.close();
         console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        infowindow.open(map, marker);
         console.log('open window');
       }
-    });
-    this.infoWindow.addListener('closeclick', function() {
-      map.setZoom(defZoom);
-      map.setCenter(defCenter);
-      marker.setAnimation(null);
     });
     self.places.push(this.newMarker);
     self.places.pop();
@@ -295,7 +283,7 @@ function app() {
   };
   self.newPlaces = function(input) {
     for (var i = 0; i < input.length; i++) {
-      self.places.push(new place(input[i]));
+      self.places.push(new Place(input[i]));
       self.placesResults.push(self.places[i]);
     }
   };
@@ -309,7 +297,7 @@ function app() {
    *  or remove logs as neccesary.
    */
 
-  place.prototype.log = function() {
+  Place.prototype.log = function() {
     console.log(this.name);
     console.log(this.lat);
     console.log(this.lng);
@@ -327,21 +315,20 @@ function app() {
    * @description Marker Visibility toggle.
    */
 
-  place.prototype.visible = function() {
+
+  Place.prototype.visible = function() {
     this.newMarker.setVisible(true);
   };
-  place.prototype.hidden = function() {
+  Place.prototype.hidden = function() {
     this.newMarker.setVisible(false);
   };
 
-  place.prototype.open = function() {
-    this.infoWindow.open(map, this.newMarker);
+  Place.prototype.open = function() {
     map.setZoom(this.zoom);
     map.setCenter(this.coords);
     this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
   };
-  place.prototype.close = function() {
-    this.infoWindow.close();
+  Place.prototype.close = function() {
     map.setZoom(defZoom);
     map.setCenter(defCenter);
     this.newMarker.setAnimation(null);
