@@ -113,6 +113,7 @@ var appInit = function() {
       disableDefaultUI: true
     };
     var map = new google.maps.Map(mapDisp, mapOptions);
+    infowindow = new google.maps.InfoWindow();
     bounds = new google.maps.LatLngBounds();
     return map;
   }
@@ -254,6 +255,7 @@ function app() {
         this.photosPrefix = data.response.venue.photos.groups[0].items[0].prefix;
         this.photosSuffix = data.response.venue.photos.groups[0].items[0].suffix;
         console.log('Info Window Content from NEWMARKER', data);
+        // console.log('Info Window Content from NEWMARKER', this);
       },
       error: function(result) {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
@@ -261,22 +263,26 @@ function app() {
     });
     this.content =
       "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
-      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
+      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
 
     var marker = this.newMarker;
+    var content = this.content;
     var zoom = this.zoom;
 
     marker.addListener('click', function() {
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
         map.fitBounds(bounds);
+        infowindow.close();
         console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         map.setZoom(zoom);
         map.panTo(marker.getPosition());
+        infowindow.close();
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
         console.log('open window');
-        self.window(this);
       }
     });
     bounds.extend(this.boundsPoint);
@@ -296,8 +302,6 @@ function app() {
   self.window = function(data) {
     var content = data.content;
     var marker = data.newMarker;
-    var infowindow = new google.maps.InfoWindow(map, marker);
-    infowindow.open(map, marker);
   };
 
   //***************************************************************//
