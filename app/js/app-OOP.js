@@ -116,7 +116,11 @@ var appInit = function() {
     bounds = new google.maps.LatLngBounds();
     return map;
   }
-
+  google.maps.event.addDomListener(window, "resize", function() {
+    google.maps.event.trigger(map, "resize");
+    map.fitBounds(bounds);
+    console.log('Window Size Change');
+  });
   // Fires Up the Map.
   self.map = dispMap(defCenter);
   app.newPlaces(model.default);
@@ -265,14 +269,14 @@ function app() {
     marker.addListener('click', function() {
       if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
-        map.setZoom(defZoom);
-        map.setCenter(defCenter);
+        map.fitBounds(bounds);
         console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
         map.setZoom(zoom);
         map.panTo(marker.getPosition());
         console.log('open window');
+        self.window(this);
       }
     });
     bounds.extend(this.boundsPoint);
@@ -291,8 +295,9 @@ function app() {
 
   self.window = function(data) {
     var content = data.content;
-    var infowindow = new google.maps.InfoWindow(map, data.newMarker);
-    infowindow.open();
+    var marker = data.newMarker;
+    var infowindow = new google.maps.InfoWindow(map, marker);
+    infowindow.open(map, marker);
   };
 
   //***************************************************************//
@@ -342,8 +347,7 @@ function app() {
     this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
   };
   Place.prototype.close = function() {
-    map.setZoom(defZoom);
-    map.setCenter(defCenter);
+    map.fitBounds(bounds);
     this.newMarker.setAnimation(null);
   };
 
