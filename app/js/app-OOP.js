@@ -255,9 +255,12 @@ function app() {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
       }
     });
+    this.content =
+      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
+      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
 
     var marker = this.newMarker;
-    var infowindow = this.infoWindow;
+    var zoom = this.zoom;
 
     marker.addListener('click', function() {
       if (marker.getAnimation() !== null) {
@@ -267,6 +270,7 @@ function app() {
         console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
+        map.setZoom(zoom);
         map.panTo(marker.getPosition());
         console.log('open window');
       }
@@ -274,7 +278,7 @@ function app() {
     bounds.extend(this.boundsPoint);
     self.places.push(this.newMarker);
     self.places.pop();
-    map.fitBounds(bounds);
+
 
   };
   self.newPlaces = function(input) {
@@ -282,17 +286,20 @@ function app() {
       self.places.push(new Place(input[i]));
       self.placesResults.push(self.places[i]);
     }
+    map.fitBounds(bounds);
   };
 
   self.window = function(data) {
-    var content =
-      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
-      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
-    var options = {
-      
-    };
-
+    var content = data.content;
+    var infowindow = new google.maps.InfoWindow(map, data.newMarker);
+    infowindow.open();
   };
+
+  //***************************************************************//
+  // CLICK EVENTS
+  //***************************************************//
+
+
 
   //***************************************************************//
   // PLACES PROTOTYPES
@@ -331,7 +338,7 @@ function app() {
 
   Place.prototype.open = function() {
     map.setZoom(this.zoom);
-    map.setCenter(this.coords);
+    map.panTo(this.newMarker.getPosition());
     this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
   };
   Place.prototype.close = function() {
