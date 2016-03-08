@@ -113,8 +113,8 @@ var appInit = function() {
       disableDefaultUI: true
     };
     var map = new google.maps.Map(mapDisp, mapOptions);
+    bounds = new google.maps.LatLngBounds();
     return map;
-
   }
 
   // Fires Up the Map.
@@ -225,6 +225,7 @@ function app() {
       clickable: true,
       icon: this.icon,
     });
+    this.boundsPoint = new google.maps.LatLng(this.lat, this.lng);
 
     var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
     var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
@@ -254,9 +255,6 @@ function app() {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
       }
     });
-    this.content =
-      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
-      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
 
     var marker = this.newMarker;
     var infowindow = this.infoWindow;
@@ -269,13 +267,14 @@ function app() {
         console.log('close window');
       } else {
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        map.setZoom(marker.zoom);
         map.panTo(marker.getPosition());
         console.log('open window');
       }
     });
+    bounds.extend(this.boundsPoint);
     self.places.push(this.newMarker);
     self.places.pop();
+    map.fitBounds(bounds);
 
   };
   self.newPlaces = function(input) {
@@ -283,6 +282,16 @@ function app() {
       self.places.push(new Place(input[i]));
       self.placesResults.push(self.places[i]);
     }
+  };
+
+  self.window = function(data) {
+    var content =
+      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
+      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow.count + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
+    var options = {
+      
+    };
+
   };
 
   //***************************************************************//
@@ -331,7 +340,6 @@ function app() {
     this.newMarker.setAnimation(null);
   };
 
-
   //***************************************************************//
   // SEARCH FUNCTION
   //***************************************************//
@@ -349,7 +357,6 @@ function app() {
         console.log('PUT THE ' + place.name + ' AWAY!');
       }
     });
-
   };
 
   //***************************************************************//
