@@ -349,10 +349,14 @@ function app() {
     map.setZoom(this.zoom);
     map.panTo(this.newMarker.getPosition());
     this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
+    infowindow.close();
+    infowindow.setContent(this.content);
+    infowindow.open(map, this.newMarker);
   };
   Place.prototype.close = function() {
     map.fitBounds(bounds);
     this.newMarker.setAnimation(null);
+    infowindow.close();
   };
 
   //***************************************************************//
