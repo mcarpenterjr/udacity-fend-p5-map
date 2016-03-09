@@ -222,7 +222,7 @@ function app() {
     this.hereNow = '';
     this.photosPrefix = '';
     this.photosSuffix = '';
-    this.content = "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address + "</p>" + "<p><span class='place-rating'><strong>" + this.venueRating + "</strong>" + "<sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow + " people checked-in now</p><img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
+    this.content = '';
 
     this.newMarker = new google.maps.Marker({
       position: this.coords,
@@ -256,6 +256,13 @@ function app() {
         this.hereNow = data.response.venue.hereNow.count;
         this.photosPrefix = data.response.venue.photos.groups[0].items[0].prefix;
         this.photosSuffix = data.response.venue.photos.groups[0].items[0].suffix;
+        this.content = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" +
+        "<p>" + data.response.venue.location.address + "</p>" +
+        "<p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong>" +
+        "<sup> / 10</sup></span> " +
+        "<span class='place-category'>" + data.response.venue.categories[0].name + "</p></span>" +
+        "<p>" + data.response.venue.hereNow.count + " people checked-in now</p>" +
+        "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
         console.log('Info Window Content from NEWMARKER', data);
         // console.log('Info Window Content from NEWMARKER', this);
       },
