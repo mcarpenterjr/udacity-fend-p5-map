@@ -222,6 +222,8 @@ function app() {
     this.hereNow = '';
     this.photosPrefix = '';
     this.photosSuffix = '';
+    this.content = "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address + "</p>" + "<p><span class='place-rating'><strong>" + this.venueRating + "</strong>" + "<sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow + " people checked-in now</p><img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
+
     this.newMarker = new google.maps.Marker({
       position: this.coords,
       map: map,
@@ -261,9 +263,6 @@ function app() {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
       }
     });
-    this.content =
-      "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p><p>" + this.address +
-      "</p><p><span class='place-rating'><strong>" + this.venueRating + "</strong><sup> / 10</sup></span>" + "<span class='place-category'>" + this.categories + "</p><p>" + this.hereNow + " people checked-in now</p>" + "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
 
     var marker = this.newMarker;
     var content = this.content;
@@ -285,6 +284,12 @@ function app() {
         console.log('open window');
       }
     });
+    infowindow.addListener('closeclick', function() {
+    marker.setAnimation(null);
+    map.fitBounds(bounds);
+    console.log('Info Window Close Click');
+    });
+
     bounds.extend(this.boundsPoint);
     self.places.push(this.newMarker);
     self.places.pop();
@@ -297,11 +302,6 @@ function app() {
       self.placesResults.push(self.places[i]);
     }
     map.fitBounds(bounds);
-  };
-
-  self.window = function(data) {
-    var content = data.content;
-    var marker = data.newMarker;
   };
 
   //***************************************************************//
