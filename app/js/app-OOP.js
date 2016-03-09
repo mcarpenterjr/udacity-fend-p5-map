@@ -346,9 +346,9 @@ function app() {
   };
 
   Place.prototype.open = function() {
+    this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
     map.setZoom(this.zoom);
     map.panTo(this.newMarker.getPosition());
-    this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
     infowindow.close();
     infowindow.setContent(this.content);
     infowindow.open(map, this.newMarker);
