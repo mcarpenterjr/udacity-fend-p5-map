@@ -223,7 +223,6 @@ function app() {
     this.photosPrefix = '';
     this.photosSuffix = '';
     this.content = '';
-
     this.newMarker = new google.maps.Marker({
       position: this.coords,
       map: map,
@@ -233,6 +232,10 @@ function app() {
       icon: this.icon,
     });
     this.boundsPoint = new google.maps.LatLng(this.lat, this.lng);
+
+    var marker = this.newMarker;
+    var zoom = this.zoom;
+    var contentString = this.content;
 
     var FSCLIENT_ID = 'SCCAY03SWJPAHUTNJNEDCXXHHQC0MNPZFJGZCLIPXGRUVCLC';
     var FSCLIENT_SECRET = '020SLKZRVCSZK3BWLXUNHMB0DF5DA21XQQSHWH1DSN5D5QYQ';
@@ -257,12 +260,12 @@ function app() {
         this.photosPrefix = data.response.venue.photos.groups[0].items[0].prefix;
         this.photosSuffix = data.response.venue.photos.groups[0].items[0].suffix;
         this.content = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" +
-        "<p>" + data.response.venue.location.address + "</p>" +
-        "<p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong>" +
-        "<sup> / 10</sup></span> " +
-        "<span class='place-category'>" + data.response.venue.categories[0].name + "</p></span>" +
-        "<p>" + data.response.venue.hereNow.count + " people checked-in now</p>" +
-        "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
+          "<p>" + data.response.venue.location.address + "</p>" +
+          "<p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong>" +
+          "<sup> / 10</sup></span> " +
+          "<span class='place-category'>" + data.response.venue.categories[0].name + "</p></span>" +
+          "<p>" + data.response.venue.hereNow.count + " people checked-in now</p>" +
+          "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
         console.log('Info Window Content from NEWMARKER', data);
         // console.log('Info Window Content from NEWMARKER', this);
       },
@@ -271,36 +274,9 @@ function app() {
       }
     });
 
-    var marker = this.newMarker;
-    var content = this.content;
-    var zoom = this.zoom;
-
-    marker.addListener('click', function() {
-      if (marker.getAnimation() !== null) {
-        marker.setAnimation(null);
-        map.fitBounds(bounds);
-        infowindow.close();
-        console.log('close window');
-      } else {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        map.setZoom(zoom);
-        map.panTo(marker.getPosition());
-        infowindow.close();
-        infowindow.setContent(content);
-        infowindow.open(map, marker);
-        console.log('open window');
-      }
-    });
-    infowindow.addListener('closeclick', function() {
-    marker.setAnimation(null);
-    map.fitBounds(bounds);
-    console.log('Info Window Close Click');
-    });
-
     bounds.extend(this.boundsPoint);
     self.places.push(this.newMarker);
     self.places.pop();
-
 
   };
   self.newPlaces = function(input) {
@@ -314,8 +290,6 @@ function app() {
   //***************************************************************//
   // CLICK EVENTS
   //***************************************************//
-
-
 
   //***************************************************************//
   // PLACES PROTOTYPES
