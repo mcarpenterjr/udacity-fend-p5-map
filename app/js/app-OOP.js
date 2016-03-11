@@ -281,7 +281,7 @@ function app() {
               self.places.forEach(function(place) {
                 place.noBounce();
               });
-              marker.setAnimation(google.maps.Animation.BOUNCE)
+              marker.setAnimation(google.maps.Animation.BOUNCE);
               infowindow.close();
               infowindow.setContent(temp_html);
               infowindow.open(temp_map, temp_marker);
