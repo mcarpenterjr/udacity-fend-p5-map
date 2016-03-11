@@ -222,7 +222,7 @@ function app() {
     this.hereNow = '';
     this.photosPrefix = '';
     this.photosSuffix = '';
-    this.content = '';
+    this.content = this.name;
     this.newMarker = new google.maps.Marker({
       position: this.coords,
       map: map,
@@ -259,19 +259,45 @@ function app() {
         this.hereNow = data.response.venue.hereNow.count;
         this.photosPrefix = data.response.venue.photos.groups[0].items[0].prefix;
         this.photosSuffix = data.response.venue.photos.groups[0].items[0].suffix;
-        this.content = "<p><strong><a class='place-name' href='" + data.response.venue.canonicalUrl + "'>" + data.response.venue.name + "</a></strong></p>" +
-          "<p>" + data.response.venue.location.address + "</p>" +
-          "<p><span class='place-rating'><strong>" + data.response.venue.rating + "</strong>" +
+        this.content = "<p><strong><a class='place-name' href='" + this.url + "'>" + this.name + "</a></strong></p>" +
+          "<p>" + this.address + "</p>" +
+          "<p><span class='place-rating'><strong>" + this.venueRating + "</strong>" +
           "<sup> / 10</sup></span> " +
-          "<span class='place-category'>" + data.response.venue.categories[0].name + "</p></span>" +
-          "<p>" + data.response.venue.hereNow.count + " people checked-in now</p>" +
-          "<img src='" + data.response.venue.photos.groups[0].items[0].prefix + "80x80" + data.response.venue.photos.groups[0].items[0].suffix + "'</img>";
+          "<span class='place-category'>" + this.categories + "</p></span>" +
+          "<p>" + this.hereNow + " people checked-in now</p>" +
+          "<img src='" + this.photosPrefix + "80x80" + this.photosSuffix + "'</img>";
         console.log('Info Window Content from NEWMARKER', data);
         // console.log('Info Window Content from NEWMARKER', this);
+
+        // THIS IS A CLOSURE... I guess? FLM!
+        (function(temp_html, temp_map, temp_marker) {
+          google.maps.event.addListener(temp_marker, 'click', function() {
+            if (marker.getAnimation() !== null) {
+              marker.setAnimation(null);
+              map.fitBounds(bounds);
+              infowindow.close();
+              console.log('close window');
+            } else {
+              self.places.forEach(function(place) {
+                place.noBounce();
+              });
+              marker.setAnimation(google.maps.Animation.BOUNCE)
+              infowindow.close();
+              infowindow.setContent(temp_html);
+              infowindow.open(temp_map, temp_marker);
+              console.log('open window');
+            }
+          });
+        }(this.content, map, marker));
       },
       error: function(result) {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
       }
+    });
+
+    infowindow.addListener('closeclick', function() {
+      map.fitBounds(bounds);
+      marker.setAnimation(null);
     });
 
     bounds.extend(this.boundsPoint);
@@ -322,11 +348,17 @@ function app() {
   Place.prototype.visible = function() {
     this.newMarker.setVisible(true);
   };
+  Place.prototype.noBounce = function() {
+    this.newMarker.setAnimation(null);
+  };
   Place.prototype.hidden = function() {
     this.newMarker.setVisible(false);
   };
 
   Place.prototype.open = function() {
+    self.places.forEach(function(place) {
+      place.noBounce();
+    });
     this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
     map.setZoom(this.zoom);
     map.panTo(this.newMarker.getPosition());
