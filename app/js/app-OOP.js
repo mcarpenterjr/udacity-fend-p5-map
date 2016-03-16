@@ -358,15 +358,23 @@ function app() {
   };
 
   Place.prototype.open = function() {
-    self.places.forEach(function(place) {
-      place.noBounce();
-    });
-    this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
-    map.setZoom(this.zoom);
-    map.panTo(this.newMarker.getPosition());
-    infowindow.close();
-    infowindow.setContent(this.content);
-    infowindow.open(map, this.newMarker);
+    if (this.newMarker.getAnimation() !== null) {
+      this.newMarker.setAnimation(null);
+      map.fitBounds(bounds);
+      infowindow.close();
+      console.log('close window');
+    } else {
+      self.places.forEach(function(place) {
+        place.noBounce();
+      });
+      this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
+      map.setZoom(this.zoom);
+      map.panTo(this.newMarker.getPosition());
+      infowindow.close();
+      infowindow.setContent(this.content);
+      infowindow.open(map, this.newMarker);
+      console.log('open window');
+    }
   };
   Place.prototype.close = function() {
     map.fitBounds(bounds);
