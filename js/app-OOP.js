@@ -270,7 +270,7 @@ function app() {
         // console.log('Info Window Content from NEWMARKER', this);
 
         // THIS IS A CLOSURE... I guess? FLM!
-        (function(temp_html, temp_map, temp_marker) {
+        (function(temp_html, temp_map, temp_marker, temp_zoom) {
           google.maps.event.addListener(temp_marker, 'click', function() {
             if (marker.getAnimation() !== null) {
               marker.setAnimation(null);
@@ -282,13 +282,15 @@ function app() {
                 place.noBounce();
               });
               marker.setAnimation(google.maps.Animation.BOUNCE);
+              map.setZoom(temp_zoom);
+              map.panTo(temp_marker.getPosition());
               infowindow.close();
               infowindow.setContent(temp_html);
               infowindow.open(temp_map, temp_marker);
               console.log('open window');
             }
           });
-        }(this.content, map, marker));
+        }(this.content, map, marker, this.zoom));
       },
       error: function(result) {
         Materialize.toast("Can't Reach FourSquare. . .", 6000);
@@ -356,15 +358,23 @@ function app() {
   };
 
   Place.prototype.open = function() {
-    self.places.forEach(function(place) {
-      place.noBounce();
-    });
-    this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
-    map.setZoom(this.zoom);
-    map.panTo(this.newMarker.getPosition());
-    infowindow.close();
-    infowindow.setContent(this.content);
-    infowindow.open(map, this.newMarker);
+    if (this.newMarker.getAnimation() !== null) {
+      this.newMarker.setAnimation(null);
+      map.fitBounds(bounds);
+      infowindow.close();
+      console.log('close window');
+    } else {
+      self.places.forEach(function(place) {
+        place.noBounce();
+      });
+      this.newMarker.setAnimation(google.maps.Animation.BOUNCE);
+      map.setZoom(this.zoom);
+      map.panTo(this.newMarker.getPosition());
+      infowindow.close();
+      infowindow.setContent(this.content);
+      infowindow.open(map, this.newMarker);
+      console.log('open window');
+    }
   };
   Place.prototype.close = function() {
     map.fitBounds(bounds);
